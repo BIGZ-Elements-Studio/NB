@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ccda84c7a677bc42954296465d85d7b, type: 3}
+  m_Name: 4
+  m_EditorClassIdentifier: 
+  CharacterName: MCharacter (4)(Clone)
+  Character: {fileID: 6992662955142891019, guid: c41d0c4772e8b9e409a0950c637ad6fd, type: 3}
+  attckNum: 0
+  currentHp: 0
+  maxHp: 0

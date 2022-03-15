@@ -9,11 +9,14 @@ public class CameraController : MonoBehaviour
     public float shiftFactor = 4f;
     private bool is3D = false;
     public Camera cam;
+    public GameObject follow;
+    public BoolObj ThreeD;
 
     // Start is called before the first frame update
     void Start()
     {
-        Tests.SwitchD += Change; 
+        ThreeD.value= true;
+        CharaterController.SwitchD += Change; 
     }
 
     // Update is called once per frame
