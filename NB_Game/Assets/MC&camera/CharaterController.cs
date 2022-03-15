@@ -76,15 +76,10 @@ public class CharaterController : MonoBehaviour
 
     void Load()
     {
-        Instantiate(team.One.Character, this.transform);
-        One = GameObject.Find(team.One.CharacterName);
-        Instantiate(team.Two.Character, this.transform);
-        Two = GameObject.Find(team.Two.CharacterName);
-        Instantiate(team.Three.Character, this.transform);
-        Three = GameObject.Find(team.Three.CharacterName);
-        Instantiate(team.Four.Character, this.transform);
-        Four = GameObject.Find(team.Four.CharacterName);
-
+        One = Instantiate(team.One.Character, this.transform);
+        Two = Instantiate(team.Two.Character, this.transform);
+        Three = Instantiate(team.Three.Character, this.transform);
+        Four = Instantiate(team.Four.Character, this.transform);
         chage();
     }
 
