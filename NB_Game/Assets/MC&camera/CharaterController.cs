@@ -16,9 +16,11 @@ public class CharaterController : MonoBehaviour
     public GameObject Four;
 
     public COnTwoD twoDS;
+    public COnThreeD threeDS;
     //switch
     public delegate void simpleD();
     public static simpleD SwitchD;
+
 
     public int current=1;
     public BoolObj threeD;
@@ -28,6 +30,9 @@ public class CharaterController : MonoBehaviour
         twoDS = GetComponent<COnTwoD>();
         Load();
         twoDS.enabled = !threeD.value;
+        threeDS.enabled = threeD.value;
+        SwithchState();
+
     }
 
     private void Update()
@@ -38,9 +43,7 @@ public class CharaterController : MonoBehaviour
             if (SwitchD != null)
             {
                 SwitchD();
-                Debug.Log("changed");
             }
-            Debug.Log("Inputed");
         }
 
         
@@ -112,8 +115,9 @@ public class CharaterController : MonoBehaviour
     {
         threeD.value = !threeD.value;
         twoDS.enabled = !threeD.value;
+        threeDS.enabled = threeD.value;
     }
     
 
 
-    }
+}

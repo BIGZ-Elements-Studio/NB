@@ -10,4 +10,7 @@ public class TeamObj : ScriptableObject
     public CharacterInfo Three;
     public CharacterInfo Four;
 
+    public float xVelocity;
+    public float zVelocity;
+
 }

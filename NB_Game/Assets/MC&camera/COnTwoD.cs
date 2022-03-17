@@ -52,6 +52,5 @@ public class COnTwoD : MonoBehaviour
     void FixedUpdate()
     {
         rb.velocity = new Vector3(direction * speed / Time.timeScale, rb.velocity.y,0);
-        Debug.Log("moved");
     }
 }
