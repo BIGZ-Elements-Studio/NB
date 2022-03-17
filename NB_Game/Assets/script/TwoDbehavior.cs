@@ -11,6 +11,7 @@ public class TwoDbehavior : MonoBehaviour
     }
     void LateUpdate()
     {
+
         transform.LookAt(transform.position + cam.forward);
     }
 }

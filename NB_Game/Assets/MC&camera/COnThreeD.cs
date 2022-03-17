@@ -4,15 +4,15 @@ using UnityEngine;
 
 public class COnThreeD : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public Rigidbody rb;
+    public TeamObj V;
+    private void Start()
     {
-        
+        rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void FixedUpdate()
     {
-        
+        rb.velocity = new Vector3(V.xVelocity, rb.velocity.y,V.zVelocity) ;
     }
 }
