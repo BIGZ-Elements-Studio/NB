@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 7643740869468244649}
   - component: {fileID: 7643740869468244650}
   - component: {fileID: 3693928784494309666}
+  - component: {fileID: 1996190475506518018}
   m_Layer: 6
   m_Name: MCharacter (1)
   m_TagString: Untagged
@@ -104,3 +105,16 @@ MonoBehaviour:
   DashPassedT: 0
   velocity: 10
   team: {fileID: 11400000, guid: ef7ef880232ce1847913519f24f57bf0, type: 2}
+--- !u!114 &1996190475506518018
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7643740869468244648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f9705a59f01d419419213ec68560f19e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thisCharacter: {fileID: 11400000, guid: 75d99dc092ffb6c45823bafecc3a9220, type: 2}
