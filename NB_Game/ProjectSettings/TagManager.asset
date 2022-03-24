@@ -12,10 +12,10 @@ TagManager:
   - Water
   - UI
   - character
-  - interactbleSprite
-  - backGroundSprite
+  - enemy
+  - objects
   - backGroundPicture
-  - 
+  - backGroundSprite
   - 
   - 
   - 
