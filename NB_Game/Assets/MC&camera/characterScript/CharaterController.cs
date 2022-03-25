@@ -49,22 +49,22 @@ public class CharaterController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             current = 1;
-            chage();
+            change();
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             current = 2;
-            chage();
+            change();
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             current = 3;
-            chage();
+            change();
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
             current = 4;
-            chage();
+            change();
         }
 
     }
@@ -82,10 +82,10 @@ public class CharaterController : MonoBehaviour
         Two = Instantiate(team.Two.Character, this.transform);
         Three = Instantiate(team.Three.Character, this.transform);
         Four = Instantiate(team.Four.Character, this.transform);
-        chage();
+        change();
     }
 
-    void chage()
+    void change()
     {
         One.SetActive(false);
         Two.SetActive(false);

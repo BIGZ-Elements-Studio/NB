@@ -44,14 +44,12 @@ public class CameraController : MonoBehaviour
     {
         if (!is2D)
         {
-            //transform.position = new Vector3(follow.transform.position.x, follow.transform.position.y + hight + shiftFactor, Z);
-            //transform.position = Vector3.MoveTowards(transform.position,new Vector3(follow.transform.position.x, follow.transform.position.y + hight + shiftFactor, Z), speed);
+            
             transform.position = Vector3.SmoothDamp(transform.position, new Vector3(follow.transform.position.x, follow.transform.position.y + hight + shiftFactor, Z),ref velocity, unkonw);
         }
         else
         {
-            //transform.position = new Vector3(follow.transform.position.x, follow.transform.position.y, Z);
-            //transform.position = Vector3.MoveTowards(transform.position, new Vector3(follow.transform.position.x, follow.transform.position.y, Z), speed);
+           
             transform.position = Vector3.SmoothDamp(transform.position, new Vector3(follow.transform.position.x, follow.transform.position.y, Z), ref velocity, unkonw);
         }
     }
@@ -59,7 +57,6 @@ public class CameraController : MonoBehaviour
     void To2d()
     {
         transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        //transform.position = new Vector3(follow.transform.position.x, follow.transform.position.y, Z);
         transform.position = Vector3.MoveTowards(transform.position,new Vector3(follow.transform.position.x, follow.transform.position.y, Z), speed);
         cam.orthographic = true;
         cam.fieldOfView = TwoDF;
@@ -70,7 +67,6 @@ public class CameraController : MonoBehaviour
     {
         transform.rotation = Quaternion.Euler(rotateFactor, 0f,0f);
         cam.orthographic = false;
-        //transform.position = new Vector3(follow.transform.position.x, follow.transform.position.y + hight + shiftFactor, Z);
         transform.position = Vector3.MoveTowards(transform.position, new Vector3(follow.transform.position.x, follow.transform.position.y + hight + shiftFactor, Z), speed);
         cam.fieldOfView = ThreeDF;
     }

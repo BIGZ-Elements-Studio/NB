@@ -15,4 +15,7 @@ public class CharacterInfo : ScriptableObject
 
     public int EEnergy;
     public int EMax;
+
+    public GameObject Dash;
+
 }
