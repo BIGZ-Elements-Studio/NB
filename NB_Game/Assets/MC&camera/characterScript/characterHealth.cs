@@ -2,17 +2,35 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class characterHealth : MonoBehaviour
+public class characterHealth : AnyCharaHp
 {
     public CharacterInfo thisCharacter;
+    public int CurrentPoise;
+    public int MaxPoise = 100;
 
     private void Start()
     {
         thisCharacter.currentHp = thisCharacter.maxHp;
     }
-
-    public void takeDamage(int damage)
+    private void Update()
     {
+        increasePoise((int)Time.unscaledDeltaTime * 15);
+    }
+
+    private void increasePoise(int amount){
+        CurrentPoise += amount;
+        if (CurrentPoise>MaxPoise)
+        {
+            CurrentPoise = MaxPoise;
+        }
+    }
+    public void takeDamage(int damage, int hardness)
+    {
+        CurrentPoise -= hardness;
+        if (CurrentPoise < 0)
+        {
+            CurrentPoise = 0;
+        }
         thisCharacter.currentHp -= damage;
         if (thisCharacter.currentHp<0)
         {
@@ -31,7 +49,7 @@ public class characterHealth : MonoBehaviour
     }
 
     public void totalrecover()
-    {   
+    {
             thisCharacter.currentHp = thisCharacter.maxHp;
     }
 
