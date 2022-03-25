@@ -107,6 +107,8 @@ MonoBehaviour:
   currentEne: 0
   velocity: 10
   team: {fileID: 11400000, guid: ef7ef880232ce1847913519f24f57bf0, type: 2}
+  DashDetect: {fileID: 8864897509988806909, guid: 5c403097bbe770d42bff893862ac08ec, type: 3}
+  Dscript: {fileID: 0}
 --- !u!114 &3922560810067817762
 MonoBehaviour:
   m_ObjectHideFlags: 0

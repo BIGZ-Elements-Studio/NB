@@ -37,7 +37,9 @@ public class subCharacter : TwoDbehavior
 
     //
     public TeamObj team;
-
+    
+    public GameObject DashDetect;
+    public EAttkDetect Dscript;
 
      void Start()
     {
@@ -47,13 +49,26 @@ public class subCharacter : TwoDbehavior
         interval.Add(0.15f);
         interval.Add(0.16f);
         interval.Add(0.3f);
-        Debug.Log("hihi");
-        Debug.Log(GameObject.Find("MainCamera"));
-
         cam = GameObject.Find("MainCamera").GetComponent<Transform>();
         
         DashInterval = 0.1f;
         
+    }
+
+    void OnDrawGizmos()
+    {
+        int i = 0;
+        if (right)
+        {
+            i = 1;
+        }
+        else
+        {
+            i = -1;
+        }
+        Gizmos.matrix = Matrix4x4.TRS(new Vector3(transform.position.x + i * 0.7f, transform.position.y, transform.position.z), Quaternion.Euler(0f, 0f, 0f), new Vector3(1.1f, 0.5f, 1.1f));
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
     }
     private void Update()
     {
@@ -119,10 +134,7 @@ public class subCharacter : TwoDbehavior
         }
         if (!canE)
         {
-            if (EPassedT < 0.5f)
-            {
-               // E();
-            }
+           
             EPassedT += Time.unscaledDeltaTime;
             if (EPassedT >= EInterval)
             {
@@ -137,7 +149,7 @@ public class subCharacter : TwoDbehavior
             if (DashPassedT < 0.05f)
             {
                 canWalk = false;
-                velocity = 20f;
+                velocity = -20f;
                 if (right)
                 {
                     xDirection = 1;
@@ -149,6 +161,7 @@ public class subCharacter : TwoDbehavior
             }
             if (DashPassedT > DashInterval)
             {
+                Dscript.destroy();
                 DashPassedT = 0;
                 canDash = true;
                 canWalk = true;
@@ -158,13 +171,13 @@ public class subCharacter : TwoDbehavior
 
         if (Input.GetKeyDown(KeyCode.R) && canDash)
         {
+
+            Dscript= Instantiate(DashDetect,new Vector3(transform.position.x,transform.position.y,transform.position.z),Quaternion.Euler(0f,0f,0f)).GetComponent<EAttkDetect>();
             canDash = false;
         }
         if (Input.GetKey(KeyCode.E)&&canE)
         {
-            canE = false;
-            currentEne += 25;
-
+            canE = false;            
             E();
 
         }
@@ -177,6 +190,7 @@ public class subCharacter : TwoDbehavior
         if (Input.GetMouseButton(0)&& canNormal)
         {
             canNormal = false;
+            Debug.Log(attackNum);
         }
 
 
@@ -227,8 +241,9 @@ public class subCharacter : TwoDbehavior
     }*/
 
 
-    void normalAttackCombo(bool timeOut)
+    void normalAttack(bool timeOut)
     {
+        
         if (attackNum>5|| timeOut)
         {
             attackNum = 0;
@@ -247,17 +262,25 @@ public class subCharacter : TwoDbehavior
         }
         else
         {
-            i = 0;
+            i = -1;
         }
-        Collider[] hitedEnemy= Physics.OverlapBox(new Vector3(transform.position.x+i*1.7f,transform.position.y,transform.position.z),new Vector3(1.1f,0.5f,1.1f),Quaternion.Euler(0f,0f,0f) ,7);
+        Collider[] hitedEnemy= Physics.OverlapBox(new Vector3(transform.position.x + i * 0.7f, transform.position.y, transform.position.z), new Vector3(1.1f, 0.5f, 1.1f), Quaternion.Euler(0f, 0f, 0f), 7);
 
-        foreach(Collider enemy in hitedEnemy)
+
+        bool hit=false;
+        foreach (Collider enemy in hitedEnemy)
         {
-
-            if (enemy.GetComponent<EnemyHealth>() == null)
+            if (enemy.GetComponent<EnemyHealth>() != null)
             {
+                hit = true; 
                 Debug.Log(enemy);
+               EnemyHealth script= enemy.GetComponent<EnemyHealth>();
+                script.takeDamage(20,10);
             }
+        }
+        if (hit)
+        {
+            currentEne += 25;
         }
 
     }
