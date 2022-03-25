@@ -41,14 +41,23 @@ public class subCharacter : TwoDbehavior
 
      void Start()
     {
+        interval = new ArrayList();
+        interval.Add(0.1f);
+        interval.Add(0.1f);
+        interval.Add(0.15f);
+        interval.Add(0.16f);
+        interval.Add(0.3f);
+        Debug.Log("hihi");
+        Debug.Log(GameObject.Find("MainCamera"));
+
         cam = GameObject.Find("MainCamera").GetComponent<Transform>();
+        
         DashInterval = 0.1f;
         
     }
     private void Update()
     {
-       
-    velocity = 5f;
+        velocity = 5f;
        
         if (canWalk)
         {
@@ -86,6 +95,19 @@ public class subCharacter : TwoDbehavior
                 zDirection = 1;
             }
         }
+
+
+
+
+        if (!canNormal)
+        {
+            NormalPassedT += Time.unscaledDeltaTime;
+            if (NormalPassedT >= (float)interval[attackNum])
+            {
+                NormalPassedT = 0;
+                canNormal = true;
+            }
+        }
         if (!canQ)
         {
             QPassedT += Time.unscaledDeltaTime;
@@ -95,13 +117,11 @@ public class subCharacter : TwoDbehavior
                 canQ = true;
             }
         }
-
-
         if (!canE)
         {
             if (EPassedT < 0.5f)
             {
-                E();
+               // E();
             }
             EPassedT += Time.unscaledDeltaTime;
             if (EPassedT >= EInterval)
@@ -145,13 +165,18 @@ public class subCharacter : TwoDbehavior
             canE = false;
             currentEne += 25;
 
+            E();
+
         }
         if (Input.GetKey(KeyCode.Q)&&canQ&&currentEne>=QEnergy)
         {
             canQ = false;
-            Debug.Log("´óÕÐ");
-
-            currentEne = 0; 
+            currentEne = 0;
+            
+        }
+        if (Input.GetMouseButton(0)&& canNormal)
+        {
+            canNormal = false;
         }
 
 
@@ -200,6 +225,19 @@ public class subCharacter : TwoDbehavior
             zDirection = 1;
         }
     }*/
+
+
+    void normalAttackCombo(bool timeOut)
+    {
+        if (attackNum>5|| timeOut)
+        {
+            attackNum = 0;
+        }
+        else
+        {
+            attackNum += 1;
+        }
+    }
     void E()
     {
         int i;
@@ -212,6 +250,16 @@ public class subCharacter : TwoDbehavior
             i = 0;
         }
         Collider[] hitedEnemy= Physics.OverlapBox(new Vector3(transform.position.x+i*1.7f,transform.position.y,transform.position.z),new Vector3(1.1f,0.5f,1.1f),Quaternion.Euler(0f,0f,0f) ,7);
+
+        foreach(Collider enemy in hitedEnemy)
+        {
+
+            if (enemy.GetComponent<EnemyHealth>() == null)
+            {
+                Debug.Log(enemy);
+            }
+        }
+
     }
     void Q()
     {
