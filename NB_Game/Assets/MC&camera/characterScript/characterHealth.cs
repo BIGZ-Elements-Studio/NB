@@ -7,7 +7,7 @@ public class characterHealth : AnyCharaHp
     public CharacterInfo thisCharacter;
     public int CurrentPoise;
     public int MaxPoise = 100;
-
+    bool Immortal;
     private void Start()
     {
         thisCharacter.currentHp = thisCharacter.maxHp;
@@ -26,16 +26,19 @@ public class characterHealth : AnyCharaHp
     }
     public void takeDamage(int damage, int hardness)
     {
-        CurrentPoise -= hardness;
-        if (CurrentPoise < 0)
-        {
-            CurrentPoise = 0;
-        }
-        thisCharacter.currentHp -= damage;
-        if (thisCharacter.currentHp<0)
-        {
-            die();
-            thisCharacter.currentHp = 0; 
+
+        if (!Immortal) {
+            CurrentPoise -= hardness;
+            if (CurrentPoise < 0)
+            {
+                CurrentPoise = 0;
+            }
+            thisCharacter.currentHp -= damage;
+            if (thisCharacter.currentHp < 0)
+            {
+                die();
+                thisCharacter.currentHp = 0;
+            }
         }
     }
 

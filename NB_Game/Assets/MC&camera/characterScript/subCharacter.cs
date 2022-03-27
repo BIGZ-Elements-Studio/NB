@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class subCharacter : TwoDbehavior
 {
@@ -8,7 +9,7 @@ public class subCharacter : TwoDbehavior
     ArrayList damage;
     ArrayList interval;
     int QDamage;
-    int EDamage;
+    int EDamage=20;
     int QInterval=2;
     int EInterval=3;
     public int QEnergy=100;
@@ -25,9 +26,9 @@ public class subCharacter : TwoDbehavior
     public float DashPassedT;
     bool canWalk=true;
     public int currentEne;
+    GameObject Icon = null;
 
 
-    
     //movement
     int xDirection;
     int zDirection;
@@ -35,13 +36,22 @@ public class subCharacter : TwoDbehavior
 
     public float velocity = 5f;
 
-    //
-    public TeamObj team;
     
+    public TeamObj team;  
     public GameObject DashDetect;
     public EAttkDetect Dscript;
 
-     void Start()
+    public GameObject chasedEnemy;
+    public GameObject icon;
+
+
+
+
+
+    private bool firstDone;
+    private bool secondDone;
+
+    void Start()
     {
         interval = new ArrayList();
         interval.Add(0.1f);
@@ -49,8 +59,17 @@ public class subCharacter : TwoDbehavior
         interval.Add(0.15f);
         interval.Add(0.16f);
         interval.Add(0.3f);
+
+
+        damage = new ArrayList();
+        damage.Add(15);
+        damage.Add(10);
+        damage.Add(20);
+        damage.Add(25);
+        damage.Add(41);
+
         cam = GameObject.Find("MainCamera").GetComponent<Transform>();
-        
+        EAttkDetect.successfulDash += DashSuccessful;
         DashInterval = 0.1f;
         
     }
@@ -73,7 +92,7 @@ public class subCharacter : TwoDbehavior
     private void Update()
     {
         velocity = 5f;
-       
+       //walk direction
         if (canWalk)
         {
             if (Input.GetKey(KeyCode.LeftArrow))
@@ -113,19 +132,59 @@ public class subCharacter : TwoDbehavior
 
 
 
-
+        //attack
         if (!canNormal)
         {
             NormalPassedT += Time.unscaledDeltaTime;
-            if (NormalPassedT >= (float)interval[attackNum])
+            if (NormalPassedT >= (float)interval[attackNum - 1] + 0.5f)
             {
                 NormalPassedT = 0;
                 canNormal = true;
             }
+            else if (NormalPassedT >= (float)interval[attackNum-1]&& NormalPassedT <= (float)interval[attackNum - 1] + 1f)
+            {
+                if (Input.GetMouseButtonDown(0))
+                {
+                    NormalPassedT = 0;
+                    canNormal = false;
+                    normalAttack(false);
+                }
+            }
+
+
         }
+
+
         if (!canQ)
         {
             QPassedT += Time.unscaledDeltaTime;
+            if (QPassedT >0.1&& !firstDone)
+            {
+
+                
+                chasedEnemy = Q().gameObject;
+                firstDone = true;
+                if (chasedEnemy!=null)
+                {
+                    icon.SetActive(true);
+                    Icon = Instantiate(icon,chasedEnemy.transform);
+                    Icon.layer = 11;
+                }
+
+
+                Debug.Log("Q first "+ secondDone);
+            }
+            if (QPassedT >= 2&& !secondDone)
+            {
+                secondDone = true;
+                if (chasedEnemy != null)
+                { 
+                    GameObject.Destroy(Icon);
+                    chasedEnemy.GetComponent<EnemyHealth>().takeDamage(50,40);
+                } 
+            }
+
+
             if (QPassedT>=QInterval)
             {
                 QPassedT = 0;
@@ -168,7 +227,7 @@ public class subCharacter : TwoDbehavior
             }
         }
 
-
+        //attack input
         if (Input.GetKeyDown(KeyCode.R) && canDash)
         {
 
@@ -185,12 +244,13 @@ public class subCharacter : TwoDbehavior
         {
             canQ = false;
             currentEne = 0;
-            
+             firstDone = false;
+        secondDone = false;
         }
-        if (Input.GetMouseButton(0)&& canNormal)
+        if (Input.GetMouseButtonDown(0)&& canNormal)
         {
             canNormal = false;
-            Debug.Log(attackNum);
+            normalAttack(true);
         }
 
 
@@ -243,15 +303,50 @@ public class subCharacter : TwoDbehavior
 
     void normalAttack(bool timeOut)
     {
-        
-        if (attackNum>5|| timeOut)
+        if (attackNum >= 5|| timeOut)
         {
-            attackNum = 0;
+            attackNum = 1;
         }
         else
         {
             attackNum += 1;
         }
+
+
+        int i;
+        if (right)
+        {
+            i = 1;
+        }
+        else
+        {
+            i = -1;
+        }
+
+
+        Collider[] hitedEnemy = Physics.OverlapBox(new Vector3(transform.position.x + i * 0.7f, transform.position.y, transform.position.z), new Vector3(1.1f, 0.5f, 1.1f), Quaternion.Euler(0f, 0f, 0f), 7);
+        ArrayList enemylist = new ArrayList();
+        bool hit = false;
+        foreach (Collider enemy in hitedEnemy)
+        {
+            if (enemy.GetComponent<EnemyHealth>() != null)
+            {
+                enemylist.Add(enemy);
+
+            }
+        }
+        foreach (Collider enemy in enemylist)
+        {
+            hit = true;
+            Debug.Log(enemy);
+            EnemyHealth script = enemy.GetComponent<EnemyHealth>();
+            script.takeDamage(EDamage, 10);
+        }
+        if (hit)
+        {
+            currentEne += 10;
+        }
+        Debug.Log(attackNum);
     }
     void E()
     {
@@ -266,26 +361,85 @@ public class subCharacter : TwoDbehavior
         }
         Collider[] hitedEnemy= Physics.OverlapBox(new Vector3(transform.position.x + i * 0.7f, transform.position.y, transform.position.z), new Vector3(1.1f, 0.5f, 1.1f), Quaternion.Euler(0f, 0f, 0f), 7);
 
-
+        ArrayList enemylist=new ArrayList();
         bool hit=false;
         foreach (Collider enemy in hitedEnemy)
         {
             if (enemy.GetComponent<EnemyHealth>() != null)
             {
-                hit = true; 
-                Debug.Log(enemy);
-               EnemyHealth script= enemy.GetComponent<EnemyHealth>();
-                script.takeDamage(20,10);
+                enemylist.Add(enemy);
+                
             }
+        }
+        foreach (Collider enemy in enemylist)
+        {
+            hit = true;
+            Debug.Log(enemy);
+            EnemyHealth script = enemy.GetComponent<EnemyHealth>();
+            script.takeDamage(EDamage, 10);
         }
         if (hit)
         {
             currentEne += 25;
         }
-
     }
-    void Q()
+    Collider Q()
     {
+        int i;
+        if (right)
+        {
+            i = 1;
+        }
+        else
+        {
+            i = -1;
+        }
+        Collider[] hitedEnemy = Physics.OverlapBox(new Vector3(transform.position.x + i * 0.7f, transform.position.y, transform.position.z), new Vector3(1.1f, 0.5f, 1.1f), Quaternion.Euler(0f, 0f, 0f), 7);
+
+        ArrayList enemylist = new ArrayList();
+        bool hit = false;
+        foreach (Collider enemy in hitedEnemy)
+        {
+            if (enemy.GetComponent<EnemyHealth>() != null)
+            {
+                enemylist.Add(enemy);
+
+            }
+        }
+        float distance=10000;
+        int index = -1;
+        int j=-1;
+        foreach (Collider enemy in enemylist)
+        {
+            j += 1;
+            if (Vector3.Distance(enemy.transform.position, transform.position)< distance)
+            {
+                distance = Vector3.Distance(enemy.transform.position, transform.position);
+                index = j;
+            }
+            hit = true;
+        }
+
+        Debug.Log("enemy List created ");
+        if (hit)
+        {
+            currentEne += 25;
+        }
+
+        Debug.Log(index);
+        if (index>-1)
+        {
+            return (Collider)enemylist[0];
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    void DashSuccessful()
+    {
+
 
     }
 
