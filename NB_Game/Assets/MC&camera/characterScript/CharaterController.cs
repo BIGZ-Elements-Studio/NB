@@ -27,6 +27,7 @@ public class CharaterController : MonoBehaviour
 
     void Start()
     {
+        threeD.value = true;
         twoDS = GetComponent<COnTwoD>();
         Load();
         twoDS.enabled = !threeD.value;
@@ -119,6 +120,11 @@ public class CharaterController : MonoBehaviour
         threeD.value = !threeD.value;
         twoDS.enabled = !threeD.value;
         threeDS.enabled = threeD.value;
+
+        One.GetComponent<subCharacter>().enabled= threeD.value;
+        Two.GetComponent<subCharacter>().enabled = threeD.value;
+        Three.GetComponent<subCharacter>().enabled = threeD.value;
+        Four.GetComponent<subCharacter>().enabled = threeD.value;
     }
     
 

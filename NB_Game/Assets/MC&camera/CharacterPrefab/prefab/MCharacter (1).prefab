@@ -109,6 +109,8 @@ MonoBehaviour:
   team: {fileID: 11400000, guid: ef7ef880232ce1847913519f24f57bf0, type: 2}
   DashDetect: {fileID: 8864897509988806909, guid: 5c403097bbe770d42bff893862ac08ec, type: 3}
   Dscript: {fileID: 0}
+  chasedEnemy: {fileID: 0}
+  icon: {fileID: 7763922702909282230, guid: 1f94bf1d0c359a146974414e3a7f6adc, type: 3}
 --- !u!114 &1996190475506518018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,3 +124,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisCharacter: {fileID: 11400000, guid: 75d99dc092ffb6c45823bafecc3a9220, type: 2}
+  CurrentPoise: 0
+  MaxPoise: 100

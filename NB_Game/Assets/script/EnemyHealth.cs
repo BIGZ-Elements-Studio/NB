@@ -5,7 +5,7 @@ using UnityEngine;
 public class EnemyHealth : MonoBehaviour
 {
     public int currentHp;
-    int maxHp=100;
+    int maxHp=10000;
     int CurrentPoise = 100;
     int Maxpoise = 100;
 
