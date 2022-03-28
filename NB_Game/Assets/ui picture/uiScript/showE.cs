@@ -20,11 +20,8 @@ public class showE : MonoBehaviour
         string output = follow.GetComponentInChildren<subCharacter>().EPassedT.ToString();
         if (output.Length > 3)
         {
-            output= output.Substring(0, 3);
-            text.SetText(output);
+            output = output.Substring(0, 3);
         }
-        
-
-        //m_TextComponent.text = follow.current.Character.GetComponent<subCharacter>().EPassedT.ToString().Substring(0,3);
+        text.SetText(output);
     }
 }
