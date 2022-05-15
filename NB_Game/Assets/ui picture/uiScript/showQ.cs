@@ -7,6 +7,7 @@ using TMPro;
 public class showQ : MonoBehaviour
 {
     public GameObject follow;
+    public CharacterInfo chara; 
 
     public float smoothTime;
     public TextMeshProUGUI text;
@@ -20,12 +21,14 @@ public class showQ : MonoBehaviour
         smoothTime = 0.2f;
         background = GetComponent<Image>();
         text = GetComponentInChildren<TextMeshProUGUI>();
+
     }
     // Update is called once per frame
     void Update()
     {
+        chara= follow.GetComponentInChildren<subCharacter>().thisCharacter;
         //background.color = color.Evaluate((float)follow.GetComponentInChildren<subCharacter>().currentEne / follow.GetComponentInChildren<subCharacter>().QEnergy);
-        float realshow = (float)follow.GetComponentInChildren<subCharacter>().currentEne / follow.GetComponentInChildren<subCharacter>().QEnergy;
+        float realshow = chara.currentEnergy / follow.GetComponentInChildren<subCharacter>().QEnergy;
         if(showEn!= realshow)
         {
             showEn += Time.unscaledDeltaTime * (realshow-showEn)/smoothTime;

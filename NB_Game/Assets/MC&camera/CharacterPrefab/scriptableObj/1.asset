@@ -14,6 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharacterName: MCharacter (1)(Clone)
   Character: {fileID: 7643740869468244648, guid: b8a3801252fe39044a9ee7ad698ad459, type: 3}
-  attckNum: 0
   currentHp: 0
   maxHp: 0
+  currentEnergy: 0
+  MaxEnergy: 0
+  EEnergy: 0
+  EMax: 0
+  Dash: {fileID: 0}
