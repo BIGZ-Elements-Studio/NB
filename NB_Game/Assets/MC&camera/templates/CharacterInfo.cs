@@ -7,15 +7,32 @@ public class CharacterInfo : ScriptableObject
 {
     public string CharacterName;
     public GameObject Character;
+    //ÑªÁ¿
     public int currentHp;
     public int maxHp;
-
-    public int currentEnergy;
-    public int MaxEnergy;
+    //ÈÍĞÔ
+    public int maxPoiseHealth;
+    public int poiseHealth;
+    //ÎŞµĞ
+    public bool Immortal;
 
     public int EEnergy;
     public int EMax;
 
     public GameObject Dash;
 
+
+    public int atk;
+    public int def;
+    public int MoveSpeedRate;
+    //±©»÷
+    public int CritRate;
+    public int CritDamage;
+    //ÀäÈ´±¶ÂÊ
+    public int QCoolDownRate=100;
+    public int ECoolDownRate=100;
+    //³äÄÜ
+    public int RechargeRate=100;
+    public int currentEnergy;
+    public int MaxEnergy;
 }

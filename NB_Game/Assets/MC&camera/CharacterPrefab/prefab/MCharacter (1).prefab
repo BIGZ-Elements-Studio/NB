@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam: {fileID: 0}
+  thisCharacter: {fileID: 11400000, guid: 75d99dc092ffb6c45823bafecc3a9220, type: 2}
   attackNum: 0
   QEnergy: 100
   NormalPassedT: 0
@@ -104,7 +105,8 @@ MonoBehaviour:
   QPassedT: 0
   canDash: 1
   DashPassedT: 0
-  currentEne: 0
+  CanDashEffect: 0
+  CanSmallDashEff: 0
   velocity: 10
   team: {fileID: 11400000, guid: ef7ef880232ce1847913519f24f57bf0, type: 2}
   DashDetect: {fileID: 8864897509988806909, guid: 5c403097bbe770d42bff893862ac08ec, type: 3}
@@ -124,5 +126,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thisCharacter: {fileID: 11400000, guid: 75d99dc092ffb6c45823bafecc3a9220, type: 2}
-  CurrentPoise: 0
   MaxPoise: 100

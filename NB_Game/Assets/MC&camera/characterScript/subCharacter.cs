@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class subCharacter : TwoDbehavior
 {
+    public CharacterInfo thisCharacter;
     public int attackNum;
     ArrayList damage;
     ArrayList interval;
@@ -12,18 +13,27 @@ public class subCharacter : TwoDbehavior
     int EInterval = 3;
     public int QEnergy = 100;
     float DashInterval;
+    float DashCooldown=16f;
 
     //change
     bool canNormal = true;
     public float NormalPassedT;
+
+
     bool canE = true;
     public float EPassedT;
+
+
     bool canQ = true;
     public float QPassedT;
+
+
     public bool canDash = true;
     public float DashPassedT;
+    public bool CanDashEffect;
+    public bool CanSmallDashEff;
+
     bool canWalk = true;
-    public int currentEne;
 
 
     //movement
@@ -41,12 +51,8 @@ public class subCharacter : TwoDbehavior
     public GameObject chasedEnemy;
     public GameObject icon;
 
+    public CameraShaker CameraShaker;
 
-
-
-
-    private bool firstDone;
-    private bool secondDone;
 
 
     private WaitForSecondsRealtime wait = new WaitForSecondsRealtime(0.1f);
@@ -68,8 +74,11 @@ public class subCharacter : TwoDbehavior
         damage.Add(41);
 
         cam = GameObject.Find("MainCamera").GetComponent<Transform>();
-        EAttkDetect.successfulDash += DashSuccessful;
-        DashInterval = 0.1f;
+        EAttkDetect.successfulDash += Dashed;
+        DashInterval = 0.3f;
+        CanDashEffect = true;
+
+        CameraShaker= GameObject.Find("MainCamera").GetComponent<CameraShaker>();
     }
 
     void OnDrawGizmos()
@@ -83,10 +92,13 @@ public class subCharacter : TwoDbehavior
         {
             i = -1;
         }
-        Gizmos.matrix = Matrix4x4.TRS(new Vector3(transform.position.x + i * 0.7f, transform.position.y, transform.position.z), Quaternion.Euler(0f, 0f, 0f), new Vector3(1.1f, 0.5f, 1.1f));
+        Gizmos.matrix = Matrix4x4.TRS(new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0f, 0f, 0f), new Vector3(25f, 5f, 15f));
         Gizmos.color = Color.red;
         Gizmos.DrawWireCube(Vector3.zero, Vector3.one);
+
     }
+
+
     private void Update()
     {
         //controll direction and speed;
@@ -137,10 +149,16 @@ public class subCharacter : TwoDbehavior
 
         }
 
-        
+
+
+        //ต๗สิ
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            Dashed();
+        }
 
         //attack input
-        if (Input.GetKeyDown(KeyCode.R) && canDash)
+        if (Input.GetMouseButtonDown(1) && canDash)
         {
             StartCoroutine(DashProcess());
         }
@@ -148,7 +166,7 @@ public class subCharacter : TwoDbehavior
         {
             StartCoroutine(EProcess());
         }
-        if (Input.GetKey(KeyCode.Q) && canQ && currentEne >= QEnergy)
+        if (Input.GetKey(KeyCode.Q) && canQ && thisCharacter.currentEnergy >= QEnergy)
         {
             StartCoroutine(QProcess());
         }
@@ -206,7 +224,8 @@ public class subCharacter : TwoDbehavior
         }
         if (hit)
         {
-            currentEne += 10;
+            CameraShaker.shake();
+            thisCharacter.currentEnergy += 10;
         }
     }
     void E()
@@ -241,7 +260,8 @@ public class subCharacter : TwoDbehavior
         }
         if (hit)
         {
-            currentEne += 25;
+            CameraShaker.shake();
+            thisCharacter.currentEnergy += 25;
         }
     }
     Collider Q()
@@ -281,6 +301,7 @@ public class subCharacter : TwoDbehavior
 
         if (index > -1)
         {
+            CameraShaker.shake();
             return (Collider)enemylist[0];
         }
         else
@@ -288,16 +309,84 @@ public class subCharacter : TwoDbehavior
             return null;
         }
     }
-    void DashSuccessful()
-    {
 
+
+    void Dashed()
+    {
+        if (CanDashEffect)
+        {
+            StartCoroutine(DashSuccessfulEffect());
+        }
+        else if(CanSmallDashEff)
+        {
+            StartCoroutine(DashSuccessful());
+        }
+    }
+
+    IEnumerator DashSuccessful()
+    {
+        Debug.Log("2");
+        for (float i =1f; i<=5f; i++)
+        {
+            Time.timeScale = 1-i/10;
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
+        for (float i = 1f; i <= 5f; i++)
+        {
+            Time.timeScale = 0.5f + i / 10;
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
+        Time.timeScale = 1f;
+        yield break;
+    }
+
+
+
+    IEnumerator DashSuccessfulEffect()
+    {
+        CanSmallDashEff = false;
+        Debug.Log("1");
+        CanDashEffect = false;
+        Time.timeScale = 0.2f;
+        yield return new WaitForSecondsRealtime(8f);
+        Debug.Log("1!");
+        CanSmallDashEff = true;
+        Time.timeScale = 1f;
+        yield return new WaitForSecondsRealtime(DashCooldown-8f);
+        Debug.Log("1!!");
+        CanDashEffect = true;
+        yield break;
+    }
+
+
+
+
+    void findEnemy()
+    {
+        Collider[] hitedEnemy = Physics.OverlapBox(new Vector3(transform.position.x, transform.position.y, transform.position.z), new Vector3(25f, 5f, 15f), Quaternion.Euler(0f, 0f, 0f), 7);
+
+        ArrayList enemylist = new ArrayList();
+        foreach (Collider enemy in hitedEnemy)
+        {
+            if (enemy.GetComponent<EnemyHealth>() != null)
+            {
+                enemylist.Add(enemy);
+            }
+        }
+
+        if (enemylist[0]!=null)
+        {
+            Collider obj = (Collider)enemylist[0];
+            chasedEnemy = obj.gameObject;
+        }
+        
 
     }
 
     IEnumerator QProcess()
     {
         canQ = false;
-        currentEne = 0;
+        thisCharacter.currentEnergy = 0;
         int i = 30;
         Debug.Log("Started " + "1");
         GameObject ChasedEnemy = null;
@@ -321,7 +410,6 @@ public class subCharacter : TwoDbehavior
 
 
         yield return new WaitForSecondsRealtime(1.9f);
-        Debug.Log(3);
         if (ChasedEnemy != null)
         {
             GameObject.Destroy(Icon);
@@ -371,16 +459,14 @@ public class subCharacter : TwoDbehavior
             xDirection = -1;
         }
 
-        velocity = -20f;
+        velocity = -15f;
 
-        yield return new WaitForSecondsRealtime(0.05f);
-        canWalk = true;
+        yield return new WaitForSecondsRealtime(0.07f);
+        velocity = 3f;
         Dscript.destroy();
-        yield return new WaitForSecondsRealtime(DashInterval-0.05f);
-
+        yield return new WaitForSecondsRealtime(DashInterval- 0.07f);
+        canWalk = true;
         canDash = true;
         yield break;
     }
-
-
 }

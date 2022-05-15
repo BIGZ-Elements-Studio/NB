@@ -22,16 +22,12 @@ public class CameraController : MonoBehaviour
 
     public float speed = 0.09f;
 
-    private Vector3 velocity = Vector3.zero;
-    Vector3 Position;
-
-
     // Start is called before the first frame update
     void Start()
     {
         speed = 0.1f;
         TwoDF =50f;
-     ThreeDF=15f;
+     ThreeDF=20f;
     CharaterController.SwitchD += Change;
         is2D = ThreeD.value;
 
@@ -39,25 +35,11 @@ public class CameraController : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
-       
-    {
-        if (!is2D)
-        {
-            
-            transform.position = Vector3.SmoothDamp(transform.position, new Vector3(follow.transform.position.x, follow.transform.position.y + hight + shiftFactor, Z),ref velocity, unkonw);
-        }
-        else
-        {
-           
-            transform.position = Vector3.SmoothDamp(transform.position, new Vector3(follow.transform.position.x, follow.transform.position.y, Z), ref velocity, unkonw);
-        }
-    }
 
     void To2d()
     {
         transform.rotation = Quaternion.Euler(0f, 0f, 0f);
-        transform.position = Vector3.MoveTowards(transform.position,new Vector3(follow.transform.position.x, follow.transform.position.y, Z), speed);
+        
         cam.orthographic = true;
         cam.fieldOfView = TwoDF;
         speed = 1f;
@@ -67,7 +49,7 @@ public class CameraController : MonoBehaviour
     {
         transform.rotation = Quaternion.Euler(rotateFactor, 0f,0f);
         cam.orthographic = false;
-        transform.position = Vector3.MoveTowards(transform.position, new Vector3(follow.transform.position.x, follow.transform.position.y + hight + shiftFactor, Z), speed);
+      
         cam.fieldOfView = ThreeDF;
     }
 
