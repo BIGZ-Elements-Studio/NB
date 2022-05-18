@@ -6,7 +6,7 @@ using UnityEngine;
 public class CharacterInfo : ScriptableObject
 {
     public string CharacterName;
-    public GameObject Character;
+    //public GameObject Character;
     //ÑªÁ¿
     public int currentHp;
     public int maxHp;

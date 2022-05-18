@@ -16,6 +16,7 @@ public class EnemyHealth : MonoBehaviour
 
     public void takeDamage(int damage, int hardness)
     {
+        EffectsManager.DoFloatingText(transform.position, damage);
         CurrentPoise -= hardness;
         if (CurrentPoise<0)
         {

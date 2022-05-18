@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class CharaterController : MonoBehaviour
 {
+
+    //public Dictionary<int, GameObject> chara;
+
     public float velocity = 0f;
     public Rigidbody rb;
     public Vector2 direction;
@@ -22,11 +25,13 @@ public class CharaterController : MonoBehaviour
     public static simpleD SwitchD;
 
 
-    public int current=1;
+    public int current;
     public BoolObj threeD;
 
     void Start()
     {
+        current = 1;
+        team.currentC = 1;
         threeD.value = true;
         twoDS = GetComponent<COnTwoD>();
         Load();
@@ -79,15 +84,47 @@ public class CharaterController : MonoBehaviour
 
     void Load()
     {
-        One = Instantiate(team.One.Character, this.transform);
-        Two = Instantiate(team.Two.Character, this.transform);
-        Three = Instantiate(team.Three.Character, this.transform);
-        Four = Instantiate(team.Four.Character, this.transform);
+        
+        One = Instantiate(team.OneC, this.transform);
+        //chara.Add(1, Instantiate(team.OneC, this.transform));
+        Two = Instantiate(team.TwoC, this.transform);
+        //chara.Add(2, Two);
+        Three = Instantiate(team.ThreeC, this.transform);
+        //chara.Add(3, Three);
+        Four = Instantiate(team.FourC, this.transform);
+        //chara.Add(4, Four);
         change();
     }
 
     void change()
     {
+        /*One.GetComponent<CharaStateManager>().setActive(false);
+        One.GetComponent<CharaStateManager>().setActive(false);
+        Two.GetComponent<CharaStateManager>().setActive(false);
+        Three.GetComponent<CharaStateManager>().setActive(false);
+        Four.GetComponent<CharaStateManager>().setActive(false);
+
+        if (current == 1)
+        {
+            One.GetComponent<CharaStateManager>().setActive(true);
+            team.currentC = 1;
+        }
+        else if (current == 2)
+        {
+            Two.GetComponent<CharaStateManager>().setActive(true);
+            team.currentC = 2;
+        }
+        else if (current == 3)
+        {
+            Three.GetComponent<CharaStateManager>().setActive(true);
+            team.currentC = 3;
+        }
+        else
+        {
+            Four.GetComponent<CharaStateManager>().setActive(true);
+            team.currentC = 4;
+        }*/
+
         One.SetActive(false);
         Two.SetActive(false);
         Three.SetActive(false);
@@ -96,22 +133,22 @@ public class CharaterController : MonoBehaviour
         if (current == 1)
         {
             One.SetActive(true);
-            team.current = team.One;
+            team.currentC = 1;
         }
         else if (current == 2)
         {
             Two.SetActive(true);
-            team.current = team.Two;
+            team.currentC = 2;
         }
         else if (current == 3)
         {
             Three.SetActive(true);
-            team.current = team.Three;
+            team.currentC = 3;
         }
         else
         {
             Four.SetActive(true);
-            team.current = team.Four;
+            team.currentC = 4;
         }
     }
 
@@ -122,10 +159,32 @@ public class CharaterController : MonoBehaviour
         threeDS.enabled = threeD.value;
 
         One.GetComponent<subCharacter>().enabled= threeD.value;
-        Two.GetComponent<subCharacter>().enabled = threeD.value;
-        Three.GetComponent<subCharacter>().enabled = threeD.value;
+        Two.GetComponent<subCharacter>().enabled = threeD.value ;
+        Three.GetComponent<subCharacter>().enabled = threeD.value ;
         Four.GetComponent<subCharacter>().enabled = threeD.value;
     }
+
+   /* public GameObject getCharacter(int i)
+    {
+        if (i == 1)
+        {
+            return One;
+        }
+        else if (i == 2)
+        {
+            return Two;
+        }
+        else if (i == 3)
+        {
+            return Three;
+        }
+        else
+        {
+            return Four;
+        }
+
+
+    }*/
     
 
 

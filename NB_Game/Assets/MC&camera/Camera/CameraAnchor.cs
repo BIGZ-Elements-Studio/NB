@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class CameraAnchor : MonoBehaviour
 {
-    public float unkonw = 0.03f;
+    public float smoothTime = 0.03f;
     public float rotateFactor = 14f;
     public float shiftFactor = 4f;
     public bool is2D = false;
@@ -42,12 +42,12 @@ public class CameraAnchor : MonoBehaviour
         if (!is2D)
         {
 
-            transform.position = Vector3.SmoothDamp(transform.position, new Vector3(follow.transform.position.x, follow.transform.position.y + hight + shiftFactor, Z), ref velocity, unkonw);
+            transform.position = Vector3.SmoothDamp(transform.position, new Vector3(follow.transform.position.x, follow.transform.position.y + hight + shiftFactor, Z), ref velocity, smoothTime);
         }
         else
         {
 
-            transform.position = Vector3.SmoothDamp(transform.position, new Vector3(follow.transform.position.x, follow.transform.position.y, Z), ref velocity, unkonw);
+            transform.position = Vector3.SmoothDamp(transform.position, new Vector3(follow.transform.position.x, follow.transform.position.y, Z), ref velocity, smoothTime);
         }
     }
 

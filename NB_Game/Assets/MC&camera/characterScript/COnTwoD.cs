@@ -51,7 +51,8 @@ public class COnTwoD : MonoBehaviour
 
     bool IsGrounded()
     {
-        return Physics.Raycast(transform.position, Vector3.down,1f);
+        //return Physics.Raycast(transform.position, Vector3.down,1f);
+        return Physics.BoxCast(transform.position, transform.localScale / 2, Vector3.down, transform.rotation, 0.5f);
     }
     void FixedUpdate()
     {

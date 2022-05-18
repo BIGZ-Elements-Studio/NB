@@ -13,6 +13,6 @@ public class COnThreeD : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector3(V.xVelocity/Time.timeScale, 0,V.zVelocity/Time.timeScale);
+        rb.velocity = new Vector3(V.xVelocity/Time.timeScale, rb.velocity.y, V.zVelocity/Time.timeScale);
     }
 }

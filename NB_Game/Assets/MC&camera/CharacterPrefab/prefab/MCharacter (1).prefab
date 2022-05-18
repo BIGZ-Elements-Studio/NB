@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7643740869468244650}
   - component: {fileID: 3693928784494309666}
   - component: {fileID: 1996190475506518018}
+  - component: {fileID: 7088113263085529640}
   m_Layer: 6
   m_Name: MCharacter (1)
   m_TagString: Untagged
@@ -100,7 +101,6 @@ MonoBehaviour:
   thisCharacter: {fileID: 11400000, guid: 75d99dc092ffb6c45823bafecc3a9220, type: 2}
   attackNum: 0
   QEnergy: 100
-  NormalPassedT: 0
   EPassedT: 0
   QPassedT: 0
   canDash: 1
@@ -113,6 +113,7 @@ MonoBehaviour:
   Dscript: {fileID: 0}
   chasedEnemy: {fileID: 0}
   icon: {fileID: 7763922702909282230, guid: 1f94bf1d0c359a146974414e3a7f6adc, type: 3}
+  CameraShaker: {fileID: 0}
 --- !u!114 &1996190475506518018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -127,3 +128,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thisCharacter: {fileID: 11400000, guid: 75d99dc092ffb6c45823bafecc3a9220, type: 2}
   MaxPoise: 100
+--- !u!114 &7088113263085529640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7643740869468244648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6bd70bdf003d2164d8e358d5e675277f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
