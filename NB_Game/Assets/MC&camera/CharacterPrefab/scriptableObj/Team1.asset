@@ -12,7 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec9bdf678f884294fb4c91949b41f73b, type: 3}
   m_Name: Team1
   m_EditorClassIdentifier: 
-  One: {fileID: 11400000, guid: 75d99dc092ffb6c45823bafecc3a9220, type: 2}
-  Two: {fileID: 11400000, guid: 502fd8908dadb1342818c88071b480ff, type: 2}
-  Three: {fileID: 11400000, guid: 3a14f11dde2973e4dbea01b7c6020680, type: 2}
-  Four: {fileID: 11400000, guid: 6526f966455e9d04eb91e7d9e008e6fc, type: 2}
+  OneC: {fileID: 7643740869468244648, guid: b8a3801252fe39044a9ee7ad698ad459, type: 3}
+  TwoC: {fileID: 1901094627435110227, guid: 83d84e01df3fb944da0e0916ac83d235, type: 3}
+  ThreeC: {fileID: 6002531044192042785, guid: 9ccf5f96df463914296ebb129b58b660, type: 3}
+  FourC: {fileID: 6992662955142891019, guid: c41d0c4772e8b9e409a0950c637ad6fd, type: 3}
+  currentC: 4
+  xVelocity: -0
+  zVelocity: 0
+  faceRight: 0

@@ -10,11 +10,13 @@ public class CameraShaker : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
+    public void BigShake()
+    {
+        animator.SetTrigger("BigShake");
+    }
 
-    
     public void shake()
     {
-        Debug.Log("2");
         animator.SetTrigger("Shake");
     }
 }

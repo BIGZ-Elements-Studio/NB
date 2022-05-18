@@ -5,13 +5,13 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "TeamInfo", menuName = "New Team")]
 public class TeamObj : ScriptableObject
 {
-    public CharacterInfo One;
-    public CharacterInfo Two;
-    public CharacterInfo Three;
-    public CharacterInfo Four;
+    
+    public GameObject OneC;
+    public GameObject TwoC;
+    public GameObject ThreeC;
+    public GameObject FourC;
 
-
-    public CharacterInfo current;
+    public int currentC;
 
     public float xVelocity;
     public float zVelocity;

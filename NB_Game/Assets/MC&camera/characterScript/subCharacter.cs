@@ -1,13 +1,13 @@
 using System.Collections;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class subCharacter : TwoDbehavior
 {
     public CharacterInfo thisCharacter;
-    public int attackNum;
+    private int attackNum;
     ArrayList damage;
     ArrayList interval;
-    int QDamage;
     int EDamage = 20;
     int QInterval = 2;
     int EInterval = 3;
@@ -17,7 +17,7 @@ public class subCharacter : TwoDbehavior
 
     //change
     bool canNormal = true;
-    public float NormalPassedT;
+    //public float NormalPassedT;
 
 
     bool canE = true;
@@ -28,10 +28,10 @@ public class subCharacter : TwoDbehavior
     public float QPassedT;
 
 
-    public bool canDash = true;
-    public float DashPassedT;
-    public bool CanDashEffect;
-    public bool CanSmallDashEff;
+    [SerializeField] private bool canDash = true;
+    [SerializeField] private float DashPassedT;
+    [SerializeField] private bool CanDashEffect;
+    [SerializeField] private bool CanSmallDashEff;
 
     bool canWalk = true;
 
@@ -45,13 +45,13 @@ public class subCharacter : TwoDbehavior
 
 
     public TeamObj team;
-    public GameObject DashDetect;
-    public EAttkDetect Dscript;
+    [SerializeField] private GameObject DashDetect;
+    private EAttkDetect Dscript;
 
     public GameObject chasedEnemy;
     public GameObject icon;
 
-    public CameraShaker CameraShaker;
+    [SerializeField]private CameraShaker CameraShaker;
 
 
 
@@ -127,29 +127,7 @@ public class subCharacter : TwoDbehavior
 
 
         }
-        //attack
-        if (!canNormal)
-        {
-            NormalPassedT += Time.unscaledDeltaTime;
-            if (NormalPassedT >= (float)interval[attackNum - 1] + 0.5f)
-            {
-                NormalPassedT = 0;
-                canNormal = true;
-            }
-            else if (NormalPassedT >= (float)interval[attackNum - 1] && NormalPassedT <= (float)interval[attackNum - 1] + 1f)
-            {
-                if (Input.GetMouseButtonDown(0))
-                {
-                    NormalPassedT = 0;
-                    canNormal = false;
-                    normalAttack(false);
-                }
-            }
-
-
-        }
-
-
+        
 
         //ต๗สิ
         if (Input.GetKeyDown(KeyCode.L))
@@ -164,7 +142,8 @@ public class subCharacter : TwoDbehavior
         }
         if (Input.GetKey(KeyCode.E) && canE)
         {
-            StartCoroutine(EProcess());
+            //StartCoroutine(EProcess());
+            EProcess();
         }
         if (Input.GetKey(KeyCode.Q) && canQ && thisCharacter.currentEnergy >= QEnergy)
         {
@@ -172,8 +151,7 @@ public class subCharacter : TwoDbehavior
         }
         if (Input.GetMouseButtonDown(0) && canNormal)
         {
-            canNormal = false;
-            normalAttack(true);
+            StartCoroutine(normalAttackProcess(true));
         }
         Vector2 V = new Vector2(xDirection, zDirection).normalized * velocity;
         team.xVelocity = V.x;
@@ -181,19 +159,46 @@ public class subCharacter : TwoDbehavior
         team.faceRight = right;
     }
 
+   
+    //for cheaking combo and direct to attk 
+    IEnumerator normalAttackProcess(bool first)
+    {
+        canNormal = false;
+        bool goOn=true; 
+        attackNum = 1;
+        normalAttack(true);
+        while (goOn)
+        {
+            yield return new WaitForSecondsRealtime((float)interval[attackNum - 1]);
+            goOn = false;
+            for (float j = 0; j <= 0.5 * 30; j++)
+            {
 
+                if (Input.GetMouseButton(0))
+                {
+                    
+                    if (attackNum >= 5)
+                    {
+                        attackNum = 1;
+                    }
+                    else
+                    {
+                        attackNum += 1;
+                    }
+                    normalAttack(false);
+                    goOn = true;
+                    break;
+                }
+                yield return new WaitForSecondsRealtime(1f / 30f);
+            }
+        }
+        canNormal = true;
+        yield break;
+    }
+
+    //for attk according to attackNum 
     void normalAttack(bool timeOut)
     {
-        if (attackNum >= 5 || timeOut)
-        {
-            attackNum = 1;
-        }
-        else
-        {
-            attackNum += 1;
-        }
-
-
         int i;
         if (right)
         {
@@ -205,7 +210,7 @@ public class subCharacter : TwoDbehavior
         }
 
 
-        Collider[] hitedEnemy = Physics.OverlapBox(new Vector3(transform.position.x + i * 0.7f, transform.position.y, transform.position.z), new Vector3(1.1f, 0.5f, 1.1f), Quaternion.Euler(0f, 0f, 0f), 7);
+        Collider[] hitedEnemy = Physics.OverlapBox(new Vector3(transform.position.x + i * 0.7f, transform.position.y, transform.position.z), new Vector3(0.5f, 0.5f, 0.2f), Quaternion.Euler(0f, 0f, 0f), 7);
         ArrayList enemylist = new ArrayList();
         bool hit = false;
         foreach (Collider enemy in hitedEnemy)
@@ -220,7 +225,9 @@ public class subCharacter : TwoDbehavior
         {
             hit = true;
             EnemyHealth script = enemy.GetComponent<EnemyHealth>();
-            script.takeDamage(EDamage, 10);
+            hitTarget(1.5f, enemy.gameObject);
+            
+            script.takeDamage((int)damage[attackNum-1], 10);
         }
         if (hit)
         {
@@ -248,19 +255,19 @@ public class subCharacter : TwoDbehavior
             if (enemy.GetComponent<EnemyHealth>() != null)
             {
                 enemylist.Add(enemy);
-
+                hitTarget(2.5f, enemy.gameObject);
             }
         }
         foreach (Collider enemy in enemylist)
         {
             hit = true;
-            Debug.Log(enemy);
             EnemyHealth script = enemy.GetComponent<EnemyHealth>();
             script.takeDamage(EDamage, 10);
+            
         }
         if (hit)
         {
-            CameraShaker.shake();
+            CameraShaker.BigShake();
             thisCharacter.currentEnergy += 25;
         }
     }
@@ -311,55 +318,7 @@ public class subCharacter : TwoDbehavior
     }
 
 
-    void Dashed()
-    {
-        if (CanDashEffect)
-        {
-            StartCoroutine(DashSuccessfulEffect());
-        }
-        else if(CanSmallDashEff)
-        {
-            StartCoroutine(DashSuccessful());
-        }
-    }
-
-    IEnumerator DashSuccessful()
-    {
-        Debug.Log("2");
-        for (float i =1f; i<=5f; i++)
-        {
-            Time.timeScale = 1-i/10;
-            yield return new WaitForSecondsRealtime(0.1f);
-        }
-        for (float i = 1f; i <= 5f; i++)
-        {
-            Time.timeScale = 0.5f + i / 10;
-            yield return new WaitForSecondsRealtime(0.1f);
-        }
-        Time.timeScale = 1f;
-        yield break;
-    }
-
-
-
-    IEnumerator DashSuccessfulEffect()
-    {
-        CanSmallDashEff = false;
-        Debug.Log("1");
-        CanDashEffect = false;
-        Time.timeScale = 0.2f;
-        yield return new WaitForSecondsRealtime(8f);
-        Debug.Log("1!");
-        CanSmallDashEff = true;
-        Time.timeScale = 1f;
-        yield return new WaitForSecondsRealtime(DashCooldown-8f);
-        Debug.Log("1!!");
-        CanDashEffect = true;
-        yield break;
-    }
-
-
-
+    
 
     void findEnemy()
     {
@@ -388,12 +347,10 @@ public class subCharacter : TwoDbehavior
         canQ = false;
         thisCharacter.currentEnergy = 0;
         int i = 30;
-        Debug.Log("Started " + "1");
         GameObject ChasedEnemy = null;
         GameObject Icon = null;
 
         yield return new WaitForSecondsRealtime(0.1f);
-        Debug.Log(2);
         object obj = Q();
         if (obj != null)
         {
@@ -418,11 +375,10 @@ public class subCharacter : TwoDbehavior
         yield return new WaitForSecondsRealtime(QInterval - 0.1f - 1.9f);
         canQ = true;
 
-        Debug.Log(i);
         yield break;
     }
 
-    IEnumerator EProcess()
+    /*IEnumerator EProcess()
     {
         E();
         canE = false;
@@ -430,21 +386,50 @@ public class subCharacter : TwoDbehavior
         yield return new WaitForSecondsRealtime(EInterval);
         canE = true;
         yield break;
-    }
+    }*/
 
-    IEnumerator ESetTime()
+    /*IEnumerator ESetTime()
     {
         EPassedT = 0;
         while (EPassedT < EInterval)
         {
             EPassedT += 0.1f;
-            yield return wait;
+            yield return new WaitForSecondsRealtime(0.1f);
 
         }
         EPassedT = 0;
         yield break;
 
+    }*/
+    public async Task EProcess()
+    {
+        E();
+        canE = false;
+        ESetTime();
+        await Task.Delay(EInterval*1000);
+        canE = true;
     }
+
+
+    public async Task ESetTime()
+    {
+        EPassedT = 0;
+        while (EPassedT < EInterval)
+        {
+            EPassedT += 0.1f;
+            await Task.Delay(100);
+        }
+        EPassedT = 0;
+    }
+
+    void hitTarget(float harness, GameObject target)
+    {
+        if (target.GetComponent<Rigidbody>() != null)
+        {
+            target.GetComponent<Rigidbody>().AddForce(Vector3.Normalize(target.transform.position - transform.position) * 1000f*harness, ForceMode.Force);
+        }
+    }
+
 
     IEnumerator DashProcess()
     {
@@ -468,5 +453,82 @@ public class subCharacter : TwoDbehavior
         canWalk = true;
         canDash = true;
         yield break;
+    }
+
+    void Dashed()
+    {
+        if (CanDashEffect)
+        {
+            DashSuccessfulEffect();
+        }
+        else if (CanSmallDashEff)
+        {
+            DashSuccessful();
+        }
+    }
+
+    /*IEnumerator DashSuccessful()
+    {
+        Debug.Log("2");
+        for (float i = 1f; i <= 5f; i++)
+        {
+            Time.timeScale = 1 - i / 10;
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
+        for (float i = 1f; i <= 5f; i++)
+        {
+            Time.timeScale = 0.5f + i / 10;
+            yield return new WaitForSecondsRealtime(0.1f);
+        }
+        Time.timeScale = 1f;
+        yield break;
+    }*/
+
+    /* IEnumerator DashSuccessfulEffect()
+     {
+         CanSmallDashEff = false;
+         CanDashEffect = false;
+         Time.timeScale = 0.2f;
+         Time.fixedDeltaTime = Time.fixedDeltaTime * Time.timeScale / 2;
+         yield return new WaitForSecondsRealtime(8f);
+         CanSmallDashEff = true;
+         Time.timeScale = 1f;
+         Time.fixedDeltaTime = Time.fixedDeltaTime * Time.timeScale / 2;
+         yield return new WaitForSecondsRealtime(DashCooldown - 8f);
+         Time.fixedDeltaTime = 0.02f;
+         CanDashEffect = true;
+         yield break;
+     }*/
+    public async Task DashSuccessful()
+    {
+        for (float i = 1f; i <= 5f; i++)
+        {
+            Time.timeScale = 1 - i / 10;
+            //yield return new WaitForSecondsRealtime(0.1f);
+            await Task.Delay(100);
+        }
+        for (float i = 1f; i <= 5f; i++)
+        {
+            Time.timeScale = 0.5f + i / 10;
+            //yield return new WaitForSecondsRealtime(0.1f);
+            await Task.Delay(100);
+        }
+        Time.timeScale = 1f;
+    }
+    public async Task DashSuccessfulEffect()
+    {
+        CanSmallDashEff = false;
+        CanDashEffect = false;
+        Time.timeScale = 0.2f;
+        Time.fixedDeltaTime = Time.fixedDeltaTime * Time.timeScale / 2;
+        await Task.Delay(8 * 1000);
+        //yield return new WaitForSecondsRealtime(8f);
+        CanSmallDashEff = true;
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f;
+        await Task.Delay((int)((DashCooldown - 8)*1000));
+        //yield return new WaitForSecondsRealtime(DashCooldown - 8f);
+        Time.fixedDeltaTime = 0.02f;
+        CanDashEffect = true;
     }
 }
