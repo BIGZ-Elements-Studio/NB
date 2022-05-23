@@ -158,10 +158,10 @@ public class CharaterController : MonoBehaviour
         twoDS.enabled = !threeD.value;
         threeDS.enabled = threeD.value;
 
-        One.GetComponent<subCharacter>().enabled= threeD.value;
-        Two.GetComponent<subCharacter>().enabled = threeD.value ;
-        Three.GetComponent<subCharacter>().enabled = threeD.value ;
-        Four.GetComponent<subCharacter>().enabled = threeD.value;
+        One.GetComponent<subCharaCopy>().enabled= threeD.value;
+        Two.GetComponent<subCharaCopy>().enabled = threeD.value ;
+        Three.GetComponent<subCharaCopy>().enabled = threeD.value ;
+        Four.GetComponent<subCharaCopy>().enabled = threeD.value;
     }
 
    /* public GameObject getCharacter(int i)

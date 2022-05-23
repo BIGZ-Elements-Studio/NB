@@ -6,43 +6,26 @@ using TMPro;
 
 public class showQ : MonoBehaviour
 {
-    public GameObject follow;
-    public CharacterInfo chara; 
-
-    public float smoothTime;
-    public TextMeshProUGUI text;
     public Gradient color;
     public Image background;
-
-    float showEn;
-
     private void Start()
     {
-        smoothTime = 0.2f;
         background = GetComponent<Image>();
-        text = GetComponentInChildren<TextMeshProUGUI>();
 
     }
     // Update is called once per frame
-    void Update()
+    public void showEnergy(int Energy,int QEnergy)
     {
-        chara= follow.GetComponentInChildren<subCharacter>().thisCharacter;
-        //background.color = color.Evaluate((float)follow.GetComponentInChildren<subCharacter>().currentEne / follow.GetComponentInChildren<subCharacter>().QEnergy);
-        float realshow = chara.currentEnergy / follow.GetComponentInChildren<subCharacter>().QEnergy;
-        if(showEn!= realshow)
+        if (QEnergy<Energy)
         {
-            showEn += Time.unscaledDeltaTime * (realshow-showEn)/smoothTime;
+            background.color = color.Evaluate(1f);
+        }
+        else
+        {
+            background.color = color.Evaluate(0);
         }
         
-        background.color = color.Evaluate(showEn);
-        text.SetText("");
-        string output = follow.GetComponentInChildren<subCharacter>().QPassedT.ToString();
 
-        if (output.Length > 3)
-        {
-            output = output.Substring(0, 3);
-            text.SetText(output);
-        }
-       
+
     }
 }

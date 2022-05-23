@@ -2,42 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
-
+using System.Text;
+using System.Threading.Tasks;
 
 public class showE : MonoBehaviour
 {
-    public GameObject follow;
-    public TextMeshProUGUI text;
+   
+    [SerializeField]
+    private TextMeshProUGUI text;
 
+    bool running;
+    private StringBuilder timerTxtBuilder = new StringBuilder();
     private void Start()
     {
-        text = GetComponentInChildren<TextMeshProUGUI>();
+        running = false;
     }
-    // Update is called once per frame
-    void Update()
+    IEnumerator UpdateCD(float length,float TimePassed)
     {
-        text.SetText("");
-        string output;
-        if (follow.GetComponentInChildren<CharaterController>().team.currentC==1)
-         {
-              output = follow.GetComponentInChildren<CharaterController>().One.GetComponent<subCharacter>().EPassedT.ToString();
-         }
-         else if (follow.GetComponentInChildren<CharaterController>().team.currentC == 2)
-         {
-              output = follow.GetComponentInChildren<CharaterController>().Two.GetComponent<subCharacter>().EPassedT.ToString();
-         }
-         else if (follow.GetComponentInChildren<CharaterController>().team.currentC == 3)
-         {
-              output = follow.GetComponentInChildren<CharaterController>().Three.GetComponent<subCharacter>().EPassedT.ToString();
-         }
-         else
-         {
-              output = follow.GetComponentInChildren<CharaterController>().Four.GetComponent<subCharacter>().EPassedT.ToString();
-         }
-        if (output.Length > 3)
+        running = true;
+        int TotalTime = (int)length * 10;
+        int PassedTime = (int)TimePassed * 10;
+
+        int time= TotalTime - PassedTime;
+        while (time>=1)
         {
-            output = output.Substring(0, 3);
+
+            yield return new WaitForSecondsRealtime(0.1f);
+            time -= 1;
+            timerTxtBuilder.Length = 0;
+            timerTxtBuilder.Append(((double)time) / 10);
+            text.SetText(timerTxtBuilder.ToString());
         }
-        text.SetText(output);
+        text.SetText("");
+        running = false ;
+        yield break;
+    }
+
+    public void ShowCD(float length, float TimePassed)
+    {
+        
+            StopAllCoroutines();
+        StartCoroutine(UpdateCD(length, TimePassed));
+    }
+
+    public void reset()
+    {
+        StopAllCoroutines();
+        text.SetText("");
     }
 }

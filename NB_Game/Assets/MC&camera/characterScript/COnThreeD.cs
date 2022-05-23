@@ -13,6 +13,7 @@ public class COnThreeD : MonoBehaviour
 
     private void FixedUpdate()
     {
-        rb.velocity = new Vector3(V.xVelocity/Time.timeScale, rb.velocity.y, V.zVelocity/Time.timeScale);
+        //rb.velocity = new Vector3(V.xVelocity/Time.timeScale, rb.velocity.y, V.zVelocity/Time.timeScale);
+        rb.AddForce(new Vector3(V.xVelocity / Time.timeScale*30, 0, V.zVelocity / Time.timeScale * 30), ForceMode.Impulse);
     }
 }
