@@ -10,16 +10,13 @@ public class subCharacter : TwoDbehavior
     ArrayList interval;
     int EDamage = 20;
     int QInterval = 2;
-    int EInterval = 3;
+    int EInterval = 5;
     public int QEnergy = 100;
     float DashInterval;
     float DashCooldown=16f;
 
     //change
     bool canNormal = true;
-    //public float NormalPassedT;
-
-
     bool canE = true;
     public float EPassedT;
 
@@ -29,7 +26,6 @@ public class subCharacter : TwoDbehavior
 
 
     [SerializeField] private bool canDash = true;
-    [SerializeField] private float DashPassedT;
     [SerializeField] private bool CanDashEffect;
     [SerializeField] private bool CanSmallDashEff;
 
@@ -53,11 +49,14 @@ public class subCharacter : TwoDbehavior
 
     [SerializeField]private CameraShaker CameraShaker;
 
+    [SerializeField] private GameObject UiE;
+
 
 
     private WaitForSecondsRealtime wait = new WaitForSecondsRealtime(0.1f);
     void Start()
     {
+        UiE = GameObject.Find("E");
         interval = new ArrayList();
         interval.Add(0.1f);
         interval.Add(0.1f);
@@ -73,12 +72,18 @@ public class subCharacter : TwoDbehavior
         damage.Add(25);
         damage.Add(41);
 
+        thisCharacter.MaxEnergy = 125;
         cam = GameObject.Find("MainCamera").GetComponent<Transform>();
         EAttkDetect.successfulDash += Dashed;
         DashInterval = 0.3f;
         CanDashEffect = true;
 
-        CameraShaker= GameObject.Find("MainCamera").GetComponent<CameraShaker>();
+        CameraShaker= cam.GetComponent<CameraShaker>();
+    }
+    void Awake()
+    {
+        UiE = GameObject.Find("E");
+        thisCharacter.MaxEnergy = 125;
     }
 
     void OnDrawGizmos()
@@ -98,7 +103,19 @@ public class subCharacter : TwoDbehavior
 
     }
 
+    private void OnEnable()
+    {
+        UiManager.showEnergy(thisCharacter.currentEnergy, thisCharacter.MaxEnergy,QEnergy);
+        if (!canE)
+        {
+            UiE.GetComponent<showE>().ShowCD(EInterval, EPassedT);
+        }
+        else
+        {
+            UiE.GetComponent<showE>().reset();
+        }
 
+    }
     private void Update()
     {
         //controll direction and speed;
@@ -138,16 +155,16 @@ public class subCharacter : TwoDbehavior
         //attack input
         if (Input.GetMouseButtonDown(1) && canDash)
         {
-            StartCoroutine(DashProcess());
+            DashProcess();
         }
         if (Input.GetKey(KeyCode.E) && canE)
         {
-            //StartCoroutine(EProcess());
             EProcess();
+
         }
         if (Input.GetKey(KeyCode.Q) && canQ && thisCharacter.currentEnergy >= QEnergy)
         {
-            StartCoroutine(QProcess());
+            QProcess();
         }
         if (Input.GetMouseButtonDown(0) && canNormal)
         {
@@ -225,14 +242,15 @@ public class subCharacter : TwoDbehavior
         {
             hit = true;
             EnemyHealth script = enemy.GetComponent<EnemyHealth>();
-            hitTarget(1.5f, enemy.gameObject);
+            hitTarget(6f, enemy.gameObject);
             
             script.takeDamage((int)damage[attackNum-1], 10);
         }
         if (hit)
         {
             CameraShaker.shake();
-            thisCharacter.currentEnergy += 10;
+            thisCharacter.changeEnergy(10);
+            UiManager.showEnergy(thisCharacter.currentEnergy, thisCharacter.MaxEnergy,QEnergy);
         }
     }
     void E()
@@ -255,7 +273,7 @@ public class subCharacter : TwoDbehavior
             if (enemy.GetComponent<EnemyHealth>() != null)
             {
                 enemylist.Add(enemy);
-                hitTarget(2.5f, enemy.gameObject);
+                hitTarget(10f, enemy.gameObject);
             }
         }
         foreach (Collider enemy in enemylist)
@@ -268,7 +286,8 @@ public class subCharacter : TwoDbehavior
         if (hit)
         {
             CameraShaker.BigShake();
-            thisCharacter.currentEnergy += 25;
+            thisCharacter.changeEnergy(25);
+            UiManager.showEnergy(thisCharacter.currentEnergy, thisCharacter.MaxEnergy,QEnergy);
         }
     }
     Collider Q()
@@ -342,15 +361,17 @@ public class subCharacter : TwoDbehavior
 
     }
 
-    IEnumerator QProcess()
+    async Task QProcess()
     {
         canQ = false;
-        thisCharacter.currentEnergy = 0;
+        thisCharacter.changeEnergy(-100);
+        UiManager.showEnergy(thisCharacter.currentEnergy, thisCharacter.MaxEnergy,QEnergy);
         int i = 30;
         GameObject ChasedEnemy = null;
         GameObject Icon = null;
 
-        yield return new WaitForSecondsRealtime(0.1f);
+        //yield return new WaitForSecondsRealtime(0.1f);
+        await Task.Delay(100);
         object obj = Q();
         if (obj != null)
         {
@@ -364,18 +385,108 @@ public class subCharacter : TwoDbehavior
             Icon = Instantiate(icon, ChasedEnemy.transform);
             Icon.layer = 11;
         }
-
-
-        yield return new WaitForSecondsRealtime(1.9f);
-        if (ChasedEnemy != null)
-        {
-            GameObject.Destroy(Icon);
-            ChasedEnemy.GetComponent<EnemyHealth>().takeDamage(50, 40);
-        }
-        yield return new WaitForSecondsRealtime(QInterval - 0.1f - 1.9f);
+        await Task.Delay(1900);
         canQ = true;
+        
+    }
 
-        yield break;
+    private async Task EProcess()
+    {
+        UiE.GetComponent<showE>().ShowCD(EInterval,0);
+        E();
+        canE = false;
+        ESetTime();
+        await Task.Delay(EInterval*1000);
+        canE = true;
+    }
+
+
+    private async Task ESetTime()
+    {
+        EPassedT = 0;
+        while (EPassedT < EInterval)
+        {
+            EPassedT += 0.1f;
+            await Task.Delay(100);
+        }
+        EPassedT = 0;
+    }
+
+    void hitTarget(float harness, GameObject target)
+    {
+        if (target.GetComponent<Rigidbody>() != null)
+        {
+            target.GetComponent<Rigidbody>().AddForce(Vector3.Normalize(target.transform.position - transform.position) * 1000f*harness, ForceMode.Force);
+        }
+    }
+
+
+    public async Task DashProcess()
+    {
+        Dscript = Instantiate(DashDetect, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0f, 0f, 0f)).GetComponent<EAttkDetect>();
+        canDash = false;
+        canWalk = false;
+        if (right)
+        {
+            xDirection = 1;
+        }
+        else
+        {
+            xDirection = -1;
+        }
+
+        velocity = -15f;
+
+        await Task.Delay(70);
+        velocity = 3f;
+        Dscript.destroy();
+        await Task.Delay((int)(DashInterval*1000 - 70));
+        canWalk = true;
+        canDash = true;
+    }
+
+    void Dashed()
+    {
+        if (CanDashEffect)
+        {
+            DashSuccessfulEffect();
+        }
+        else if (CanSmallDashEff)
+        {
+            DashSuccessful();
+        }
+    }
+    private async Task DashSuccessful()
+    {
+        for (float i = 1f; i <= 5f; i++)
+        {
+            Time.timeScale = 1 - i / 10;
+            //yield return new WaitForSecondsRealtime(0.1f);
+            await Task.Delay(100);
+        }
+        for (float i = 1f; i <= 5f; i++)
+        {
+            Time.timeScale = 0.5f + i / 10;
+            //yield return new WaitForSecondsRealtime(0.1f);
+            await Task.Delay(100);
+        }
+        Time.timeScale = 1f;
+    }
+    private async Task DashSuccessfulEffect()
+    {
+        CanSmallDashEff = false;
+        CanDashEffect = false;
+        Time.timeScale = 0.2f;
+        Time.fixedDeltaTime = Time.fixedDeltaTime * Time.timeScale / 2;
+        await Task.Delay(8 * 1000);
+        //yield return new WaitForSecondsRealtime(8f);
+        CanSmallDashEff = true;
+        Time.timeScale = 1f;
+        Time.fixedDeltaTime = 0.02f;
+        await Task.Delay((int)((DashCooldown - 8)*1000));
+        //yield return new WaitForSecondsRealtime(DashCooldown - 8f);
+        Time.fixedDeltaTime = 0.02f;
+        CanDashEffect = true;
     }
 
     /*IEnumerator EProcess()
@@ -401,71 +512,6 @@ public class subCharacter : TwoDbehavior
         yield break;
 
     }*/
-    public async Task EProcess()
-    {
-        E();
-        canE = false;
-        ESetTime();
-        await Task.Delay(EInterval*1000);
-        canE = true;
-    }
-
-
-    public async Task ESetTime()
-    {
-        EPassedT = 0;
-        while (EPassedT < EInterval)
-        {
-            EPassedT += 0.1f;
-            await Task.Delay(100);
-        }
-        EPassedT = 0;
-    }
-
-    void hitTarget(float harness, GameObject target)
-    {
-        if (target.GetComponent<Rigidbody>() != null)
-        {
-            target.GetComponent<Rigidbody>().AddForce(Vector3.Normalize(target.transform.position - transform.position) * 1000f*harness, ForceMode.Force);
-        }
-    }
-
-
-    IEnumerator DashProcess()
-    {
-        Dscript = Instantiate(DashDetect, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0f, 0f, 0f)).GetComponent<EAttkDetect>();
-        canDash = false;
-        canWalk = false;
-        if(right)
-                {
-            xDirection = 1;
-        }else
-        {
-            xDirection = -1;
-        }
-
-        velocity = -15f;
-
-        yield return new WaitForSecondsRealtime(0.07f);
-        velocity = 3f;
-        Dscript.destroy();
-        yield return new WaitForSecondsRealtime(DashInterval- 0.07f);
-        canWalk = true;
-        canDash = true;
-        yield break;
-    }
-
-    void Dashed()
-    {
-        if (CanDashEffect)
-        {
-            DashSuccessfulEffect();
-        }
-        else if (CanSmallDashEff)
-        {
-            DashSuccessful();
-        }
-    }
 
     /*IEnumerator DashSuccessful()
     {
@@ -499,36 +545,28 @@ public class subCharacter : TwoDbehavior
          CanDashEffect = true;
          yield break;
      }*/
-    public async Task DashSuccessful()
-    {
-        for (float i = 1f; i <= 5f; i++)
-        {
-            Time.timeScale = 1 - i / 10;
-            //yield return new WaitForSecondsRealtime(0.1f);
-            await Task.Delay(100);
-        }
-        for (float i = 1f; i <= 5f; i++)
-        {
-            Time.timeScale = 0.5f + i / 10;
-            //yield return new WaitForSecondsRealtime(0.1f);
-            await Task.Delay(100);
-        }
-        Time.timeScale = 1f;
-    }
-    public async Task DashSuccessfulEffect()
-    {
-        CanSmallDashEff = false;
-        CanDashEffect = false;
-        Time.timeScale = 0.2f;
-        Time.fixedDeltaTime = Time.fixedDeltaTime * Time.timeScale / 2;
-        await Task.Delay(8 * 1000);
-        //yield return new WaitForSecondsRealtime(8f);
-        CanSmallDashEff = true;
-        Time.timeScale = 1f;
-        Time.fixedDeltaTime = 0.02f;
-        await Task.Delay((int)((DashCooldown - 8)*1000));
-        //yield return new WaitForSecondsRealtime(DashCooldown - 8f);
-        Time.fixedDeltaTime = 0.02f;
-        CanDashEffect = true;
-    }
+
+    /*IEnumerator DashProcess()
+   {
+       Dscript = Instantiate(DashDetect, new Vector3(transform.position.x, transform.position.y, transform.position.z), Quaternion.Euler(0f, 0f, 0f)).GetComponent<EAttkDetect>();
+       canDash = false;
+       canWalk = false;
+       if(right)
+               {
+           xDirection = 1;
+       }else
+       {
+           xDirection = -1;
+       }
+
+       velocity = -15f;
+
+       yield return new WaitForSecondsRealtime(0.07f);
+       velocity = 3f;
+       Dscript.destroy();
+       yield return new WaitForSecondsRealtime(DashInterval- 0.07f);
+       canWalk = true;
+       canDash = true;
+       yield break;
+   }*/
 }

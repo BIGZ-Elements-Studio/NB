@@ -1,10 +1,8 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 
-public class showQ : MonoBehaviour
+public class showDashCoolDown : MonoBehaviour
 {
     public Gradient color;
     public Image background;
@@ -14,9 +12,9 @@ public class showQ : MonoBehaviour
 
     }
     // Update is called once per frame
-    public void showEnergy(int Energy,int QEnergy)
+    public void showDashint(int Energy, int QEnergy)
     {
-        if (QEnergy<Energy)
+        if (QEnergy < Energy)
         {
             background.color = color.Evaluate(1f);
         }
@@ -24,7 +22,7 @@ public class showQ : MonoBehaviour
         {
             background.color = color.Evaluate(0);
         }
-        
+
 
 
     }

@@ -5,27 +5,21 @@ using FirstGearGames.SmoothCameraShaker;
 
 public class CameraController : MonoBehaviour
 {
-    public ShakeData eShake;
-    public float unkonw  = 0.03f;
     public float rotateFactor=14f;
     public float shiftFactor = 4f;
     public bool is2D = false;
     public Camera cam;
     public GameObject follow;
     public BoolObj ThreeD;
-
+    //field of view 
     public float TwoDF;
     public float ThreeDF;
 
-    public float hight = 0.93f;
-    public float Z = -15;
-
-    public float speed = 0.09f;
 
     // Start is called before the first frame update
     void Start()
     {
-        speed = 0.1f;
+        //speed = 0.1f;
         TwoDF =50f;
      ThreeDF=20f;
     CharaterController.SwitchD += Change;
@@ -42,7 +36,6 @@ public class CameraController : MonoBehaviour
         
         cam.orthographic = true;
         cam.fieldOfView = TwoDF;
-        speed = 1f;
 
     }
     void To3d()

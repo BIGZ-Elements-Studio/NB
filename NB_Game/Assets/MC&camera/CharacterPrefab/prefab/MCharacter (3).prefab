@@ -10,9 +10,9 @@ GameObject:
   m_Component:
   - component: {fileID: 6002531044192042784}
   - component: {fileID: 6002531044192042787}
-  - component: {fileID: 8874373162987335211}
   - component: {fileID: 3922560810067817762}
   - component: {fileID: 7233874633120457396}
+  - component: {fileID: 8704887909701119065}
   m_Layer: 6
   m_Name: MCharacter (3)
   m_TagString: Untagged
@@ -85,35 +85,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8874373162987335211
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6002531044192042785}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9ed30b5ce6d43b24d9a6386079e03033, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cam: {fileID: 0}
-  thisCharacter: {fileID: 11400000, guid: 3a14f11dde2973e4dbea01b7c6020680, type: 2}
-  attackNum: 0
-  QEnergy: 100
-  EPassedT: 0
-  QPassedT: 0
-  canDash: 1
-  DashPassedT: 0
-  CanDashEffect: 0
-  CanSmallDashEff: 0
-  velocity: 10
-  team: {fileID: 11400000, guid: ef7ef880232ce1847913519f24f57bf0, type: 2}
-  DashDetect: {fileID: 8864897509988806909, guid: 5c403097bbe770d42bff893862ac08ec, type: 3}
-  Dscript: {fileID: 0}
-  chasedEnemy: {fileID: 0}
-  icon: {fileID: 7763922702909282230, guid: 1f94bf1d0c359a146974414e3a7f6adc, type: 3}
-  CameraShaker: {fileID: 0}
 --- !u!114 &3922560810067817762
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -140,3 +111,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bd70bdf003d2164d8e358d5e675277f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &8704887909701119065
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6002531044192042785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e3ba459fea14dd41a08e9ed3bb2de88, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cam: {fileID: 0}
+  thisCharacter: {fileID: 11400000, guid: 3a14f11dde2973e4dbea01b7c6020680, type: 2}
+  QEnergy: 100
+  EPassedT: 0
+  QPassedT: 0
+  canDash: 1
+  CanDashEffect: 0
+  CanSmallDashEff: 0
+  velocity: 5
+  team: {fileID: 11400000, guid: ef7ef880232ce1847913519f24f57bf0, type: 2}
+  DashDetect: {fileID: 8864897509988806909, guid: 5c403097bbe770d42bff893862ac08ec, type: 3}
+  CameraShaker: {fileID: 0}
+  chasedEnemy: {fileID: 0}
+  icon: {fileID: 7763922702909282230, guid: 1f94bf1d0c359a146974414e3a7f6adc, type: 3}

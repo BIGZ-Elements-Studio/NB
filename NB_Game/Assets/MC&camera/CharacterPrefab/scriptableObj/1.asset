@@ -13,11 +13,21 @@ MonoBehaviour:
   m_Name: 1
   m_EditorClassIdentifier: 
   CharacterName: MCharacter (1)(Clone)
-  Character: {fileID: 7643740869468244648, guid: b8a3801252fe39044a9ee7ad698ad459, type: 3}
   currentHp: 0
   maxHp: 0
-  currentEnergy: 0
-  MaxEnergy: 0
+  maxPoiseHealth: 0
+  poiseHealth: 100
+  Immortal: 0
   EEnergy: 0
   EMax: 0
   Dash: {fileID: 0}
+  atk: 0
+  def: 0
+  MoveSpeedRate: 5
+  CritRate: 0
+  CritDamage: 0
+  QCoolDownRate: 100
+  ECoolDownRate: 100
+  RechargeRate: 100
+  currentEnergy: 50
+  MaxEnergy: 0

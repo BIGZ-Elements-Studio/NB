@@ -15,9 +15,10 @@ public class CameraAnchor : MonoBehaviour
     public float ThreeDF;
 
     public float hight = 0.93f;
-    public float Z = -15;
+    //Z axis of camera always constant 
+    private float Z = -15;
 
-    public float speed = 0.09f;
+    [SerializeField]private float speed = 0.09f;
 
     private Vector3 velocity = Vector3.zero;
     Vector3 Position;
