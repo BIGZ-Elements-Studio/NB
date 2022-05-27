@@ -10,6 +10,7 @@ public class FourConroller : subCharaCopy
     protected void Awake()
     {
         base.Awake();
+        CharacterName = "white";
         QEnergy = 100;
         damageInfo = new ArrayList();
         damageInfo.Add(new NormalAtkInfo(15, 0.1f));

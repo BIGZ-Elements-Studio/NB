@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 7233874633120457396}
   - component: {fileID: 8704887909701119065}
   m_Layer: 6
-  m_Name: MCharacter (3)
+  m_Name: yellow3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -99,6 +99,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   thisCharacter: {fileID: 11400000, guid: 3a14f11dde2973e4dbea01b7c6020680, type: 2}
   MaxPoise: 100
+  died: 0
 --- !u!114 &7233874633120457396
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -128,6 +129,7 @@ MonoBehaviour:
   QEnergy: 100
   EPassedT: 0
   QPassedT: 0
+  CharacterName: 
   canDash: 1
   CanDashEffect: 0
   CanSmallDashEff: 0

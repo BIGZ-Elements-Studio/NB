@@ -9,6 +9,7 @@ public class OneController : subCharaCopy
     public GameObject icon;
     protected  void Awake()
     {
+        CharacterName = "green";
         base.Awake();
         QEnergy = 100;
         damageInfo = new ArrayList();

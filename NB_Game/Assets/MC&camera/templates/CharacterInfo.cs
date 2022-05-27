@@ -5,11 +5,10 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "CharaInfo", menuName = "New Character")]
 public class CharacterInfo : ScriptableObject
 {
-    public string CharacterName;
-    //public GameObject Character;
     //ÑªÁ¿
     public int currentHp;
     public int maxHp;
+    public bool die;
     //ÈÍÐÔ
     public int maxPoiseHealth;
     public int poiseHealth;
