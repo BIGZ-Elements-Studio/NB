@@ -24,7 +24,7 @@ public class subCharaCopy : TwoDbehavior
     protected bool canQ;
     public float QPassedT;
 
-
+    public string CharacterName;
     [SerializeField] protected bool canDash;
     [SerializeField] protected bool CanDashEffect;
     [SerializeField] protected bool CanSmallDashEff;
@@ -53,6 +53,7 @@ public class subCharaCopy : TwoDbehavior
     // need to specify damageInfo,QEnergy(Energy require for Q) in awake
     protected void Awake()
     {
+        
         thisCharacter.MaxEnergy = 125;
         canNormal = true;
         canE = true;
@@ -201,23 +202,17 @@ public class subCharaCopy : TwoDbehavior
             i = -1;
         }
         Collider[] hitedEnemy = Physics.OverlapBox(new Vector3(transform.position.x + i * 0.7f, transform.position.y, transform.position.z), new Vector3(0.5f, 0.5f, 0.2f), Quaternion.Euler(0f, 0f, 0f), 7);
-        ArrayList enemylist = new ArrayList();
         bool hit = false;
+        
         foreach (Collider enemy in hitedEnemy)
         {
-            if (enemy.GetComponent<EnemyHealth>() != null)
-            {
-                enemylist.Add(enemy);
+            EnemyHealth script = enemy.gameObject.GetComponent<EnemyHealth>();
+            if (script!=null) {
+                hit = true;
+                hitTarget(6f, enemy.gameObject);
 
+                script.takeDamage((int)damage(((NormalAtkInfo)damageInfo[attackNum - 1]).damage), 10);
             }
-        }
-        foreach (Collider enemy in enemylist)
-        {
-            hit = true;
-            EnemyHealth script = enemy.GetComponent<EnemyHealth>();
-            hitTarget(6f, enemy.gameObject);
-
-            script.takeDamage((int)damage(((NormalAtkInfo)damageInfo[attackNum - 1]).damage), 10);
         }
         if (hit)
         {

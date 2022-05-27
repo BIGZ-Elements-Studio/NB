@@ -10,6 +10,7 @@ public class TwoCharacter : subCharaCopy
     protected void Awake()
     {
         base.Awake();
+        CharacterName = "blue";
         QEnergy = 50;
         damageInfo = new ArrayList();
         damageInfo.Add(new NormalAtkInfo(13, 0.1f));

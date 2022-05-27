@@ -10,6 +10,7 @@ public class ThreeController : subCharaCopy
     protected void Awake()
     {
         base.Awake();
+        CharacterName = "yellow";
         QEnergy = 100;
         damageInfo = new ArrayList();
         damageInfo.Add(new NormalAtkInfo(15, 0.1f));

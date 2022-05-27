@@ -1,12 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CharaterController : MonoBehaviour
 {
 
-    //public Dictionary<int, GameObject> chara;
-
+    [SerializeField]private Button FirstButton, SecondButton, ThirdButton;
     public float velocity = 0f;
     public Rigidbody rb;
     public Vector2 direction;
@@ -28,8 +28,14 @@ public class CharaterController : MonoBehaviour
     public int current;
     public BoolObj threeD;
 
+    //characternumber,character position
+    private Dictionary<int, int> characterPosition;
+    private Dictionary<int, GameObject> characters;
+
     void Start()
     {
+        characters = new Dictionary<int, GameObject>();
+        characterPosition = new Dictionary<int, int>();
         current = 1;
         team.currentC = 1;
         threeD.value = true;
@@ -38,6 +44,11 @@ public class CharaterController : MonoBehaviour
         twoDS.enabled = !threeD.value;
         threeDS.enabled = threeD.value;
         SwithchState();
+        FirstButton.onClick.AddListener(delegate { changeByBottom(1); });
+        SecondButton.onClick.AddListener(delegate { changeByBottom(2); });
+        ThirdButton.onClick.AddListener(delegate { changeByBottom(3); });
+        change(2);
+        change(1);
     }
 
     private void Update()
@@ -54,23 +65,19 @@ public class CharaterController : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            current = 1;
-            change();
+            change(1);
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            current = 2;
-            change();
+            change(2);
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            current = 3;
-            change();
+            change(3);
         }
         if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            current = 4;
-            change();
+            change(4);
         }
 
     }
@@ -86,72 +93,119 @@ public class CharaterController : MonoBehaviour
     {
         
         One = Instantiate(team.OneC, this.transform);
+        characters.Add(1, One);
         //chara.Add(1, Instantiate(team.OneC, this.transform));
         Two = Instantiate(team.TwoC, this.transform);
+        characters.Add(2, Two);
         //chara.Add(2, Two);
         Three = Instantiate(team.ThreeC, this.transform);
+        characters.Add(3, Three);
         //chara.Add(3, Three);
         Four = Instantiate(team.FourC, this.transform);
+        characters.Add(4, Four);
         //chara.Add(4, Four);
-        change();
+        GlobalUiManager.setName(1, Two);
+        characterPosition.Add(2, 1);
+        GlobalUiManager.setName(2, Three);
+        characterPosition.Add(3, 2);
+        GlobalUiManager.setName(3, Four);
+        characterPosition.Add(4, 3);
+
+
+       
+
+        characters[current].SetActive(true);
     }
 
-    void change()
+    
+    void change(int i)
     {
-        /*One.GetComponent<CharaStateManager>().setActive(false);
-        One.GetComponent<CharaStateManager>().setActive(false);
-        Two.GetComponent<CharaStateManager>().setActive(false);
-        Three.GetComponent<CharaStateManager>().setActive(false);
-        Four.GetComponent<CharaStateManager>().setActive(false);
+        
+        if (i !=current&& !characters[i].GetComponent<characterHealth>().died)
+        {
+            int beforeCurrent = current;
+            current = i;
+         
+            One.SetActive(false);
+            Two.SetActive(false);
+            Three.SetActive(false);
+            Four.SetActive(false);
 
-        if (current == 1)
-        {
-            One.GetComponent<CharaStateManager>().setActive(true);
-            team.currentC = 1;
-        }
-        else if (current == 2)
-        {
-            Two.GetComponent<CharaStateManager>().setActive(true);
-            team.currentC = 2;
-        }
-        else if (current == 3)
-        {
-            Three.GetComponent<CharaStateManager>().setActive(true);
-            team.currentC = 3;
-        }
-        else
-        {
-            Four.GetComponent<CharaStateManager>().setActive(true);
-            team.currentC = 4;
-        }*/
+            characters[i].SetActive(true);
+                team.currentC = i;
+            //set name that the bolck i currently was into the character previously in scene
 
+                GlobalUiManager.setName(characterPosition[i], characters[beforeCurrent]);
+
+            //change characterPosition
+            //add before current's index to the position of current 
+            characterPosition[beforeCurrent] = characterPosition[i];
+            characterPosition.Remove(i);
+            //characterPosition.Remove(i);
+            
+        }
+        
+    }
+
+    private void changeByBottom(int position)
+    {
+        int Changedcharacter=0;
+        //loop through the hashMap to find character at that position
+        foreach (int character  in characterPosition.Keys)
+        {
+            if (characterPosition[character]==position)
+            {
+                Changedcharacter = character;
+            }
+        }
+        change(Changedcharacter);
+    }
+
+    /*void change(int i)
+    {
+        int beforeCurrent = current;
+        current = i;
         One.SetActive(false);
         Two.SetActive(false);
         Three.SetActive(false);
         Four.SetActive(false);
 
-        if (current == 1)
+        if (i == 1&& !One.GetComponent<characterHealth>().died)
         {
-            One.SetActive(true);
-            team.currentC = 1;
+            
+                One.SetActive(true);
+                team.currentC = 1;
+                GlobalUiManager.setName(1, Two);
+                GlobalUiManager.setName(2, Three);
+                GlobalUiManager.setName(3, Four);
+            
         }
-        else if (current == 2)
+        else if (i == 2 && !Two.GetComponent<characterHealth>().died)
         {
+            
             Two.SetActive(true);
             team.currentC = 2;
+            GlobalUiManager.setName(1, One);
+            GlobalUiManager.setName(2, Three);
+            GlobalUiManager.setName(3, Four);
         }
-        else if (current == 3)
+        else if (i == 3 && !Three.GetComponent<characterHealth>().died)
         {
             Three.SetActive(true);
             team.currentC = 3;
+            GlobalUiManager.setName(1, One);
+            GlobalUiManager.setName(2, Two);
+            GlobalUiManager.setName(3, Four);
         }
-        else
+        else if( !Four.GetComponent<characterHealth>().died)
         {
             Four.SetActive(true);
             team.currentC = 4;
+            GlobalUiManager.setName(1, One);
+            GlobalUiManager.setName(2, Two);
+            GlobalUiManager.setName(3, Three);
         }
-    }
-
+    }*/
     void SwithchState()
     {
         threeD.value = !threeD.value;
@@ -164,28 +218,25 @@ public class CharaterController : MonoBehaviour
         Four.GetComponent<subCharaCopy>().enabled = threeD.value;
     }
 
-   /* public GameObject getCharacter(int i)
+    void LogDictionary(Dictionary<int, GameObject> a)
     {
-        if (i == 1)
+        Debug.Log("characers");
+        foreach (int character in characterPosition.Keys)
         {
-            return One;
+            Debug.Log(character+" "+a[character]);
         }
-        else if (i == 2)
+        Debug.Log("/////////////");
+    }
+    void LogDictionary(Dictionary<int, int> a)
+    {
+        Debug.Log("charaPosition");
+        foreach (int character in characterPosition.Keys)
         {
-            return Two;
+            Debug.Log(character + " " + a[character]);
         }
-        else if (i == 3)
-        {
-            return Three;
-        }
-        else
-        {
-            return Four;
-        }
+        Debug.Log("/////////////");
+    }
 
-
-    }*/
-    
 
 
 }

@@ -6,32 +6,38 @@ public class characterHealth : AnyCharaHp
 {
     public CharacterInfo thisCharacter;
     public int MaxPoise = 100;
+    public bool died;
     private void Start()
     {
+        died = false;
         thisCharacter.currentHp = thisCharacter.maxHp;
     }
     private void Update()
     {
-        increasePoise((int)Time.unscaledDeltaTime * 15);
+        if (!thisCharacter. die) {
+            increasePoise((int)Time.unscaledDeltaTime * 15);
+        }
     }
 
     private void increasePoise(int amount){
-        thisCharacter.poiseHealth += amount;
-        if (thisCharacter.poiseHealth > MaxPoise)
-        {
-            thisCharacter.poiseHealth = MaxPoise;
-        }
+        
+            thisCharacter.poiseHealth += amount;
+            if (thisCharacter.poiseHealth > MaxPoise)
+            {
+                thisCharacter.poiseHealth = MaxPoise;
+            }
+        
     }
     public void takeDamage(int damage, int hardness)
     {
 
             thisCharacter.poiseHealth -= hardness;
-            if (thisCharacter.poiseHealth < 0)
+            if (thisCharacter.poiseHealth <= 0)
             {
                 thisCharacter.poiseHealth = 0;
             }
             thisCharacter.currentHp -= damage;
-            if (thisCharacter.currentHp < 0)
+            if (thisCharacter.currentHp <= 0)
             {
                 die();
                 thisCharacter.currentHp = 0;
@@ -72,7 +78,7 @@ public class characterHealth : AnyCharaHp
 
     void die()
     {
-
+        died = true;
     }
 
 
