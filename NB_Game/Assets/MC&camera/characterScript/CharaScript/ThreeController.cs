@@ -99,11 +99,10 @@ public class ThreeController : subCharaCopy
     #region E
     protected override async Task EProcess()
     {
-        //UiE.GetComponent<showE>().ShowCD(EInterval, 0);
         UiManager.EShowCD(EInterval, 0);
+        
         E();
         canE = false;
-        ESetTime();
         await Task.Delay(EInterval * 1000);
         canE = true;
     }

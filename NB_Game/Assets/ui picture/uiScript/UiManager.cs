@@ -4,37 +4,34 @@ using UnityEngine;
 
 public class UiManager : MonoBehaviour
 {
-    [SerializeField]  GameObject ECoolDown;
-    [SerializeField]  GameObject QSlider;
-    showE EScript;
-     ShowEnergy Qscript;
-    [SerializeField] GameObject Q;
-    showQ showQ;
-    private void Awake()
-    {
-        EScript = ECoolDown.GetComponent<showE>();
-        Qscript = QSlider.GetComponent<ShowEnergy>();
-        showQ = Q.GetComponent<showQ>();
-    }
+    [SerializeField] showE EScript;
+    [SerializeField]  ShowValue Qscript;
+    [SerializeField] showQ showQ;
+    [SerializeField] ShowValue HpScript;
 
-   
-    public static void showEnergy(int Energy, int MaxEnergy,int QEnergy)
+   public void showEnergy(int Energy, int MaxEnergy,int QEnergy)
     {
         UiManager UiManager = FindObjectOfType<UiManager>();
-        UiManager.Qscript.showEnenergy(Energy, MaxEnergy);
-        UiManager.showQ.showEnergy(Energy,QEnergy);
+        UiManager.Qscript?.showValue(Energy, MaxEnergy);
+        UiManager.showQ?.showEnergy(Energy,QEnergy);
     }
-
-    public static void EShowCD(float length, float TimePassed)
+    public void showHP(int HP, int MaxHP)
     {
         UiManager UiManager = FindObjectOfType<UiManager>();
-        UiManager.EScript.ShowCD(length, TimePassed);
+        UiManager.HpScript?.showValue(HP, MaxHP);
+    }
+
+
+    public void EShowCD(float length, float TimePassed)
+    {
+        UiManager UiManager = FindObjectOfType<UiManager>();
+        UiManager.EScript?.ShowCD(length, TimePassed);
     }
 
     
-    public static void Ereset()
+    public void Ereset()
     {
         UiManager UiManager = FindObjectOfType<UiManager>();
-        UiManager.EScript.reset();
+        UiManager.EScript?.reset();
     }
 }

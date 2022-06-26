@@ -4,14 +4,14 @@ using UnityEngine;
 using UnityEngine.UI;
 
 
-public class ShowEnergy : MonoBehaviour
+public class ShowValue : MonoBehaviour
 {
     Slider thisSlider;
-    private void Start()
+    private void Awake()
     {
         thisSlider = GetComponent<Slider>();
     }
-    public void showEnenergy(int Energy, int MaxEnengry)
+    public void showValue(int Energy, int MaxEnengry)
     {
         thisSlider.value = (float)Energy / (float)MaxEnengry;
     }

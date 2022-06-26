@@ -5,12 +5,7 @@ using UnityEngine;
 public class showDirection : MonoBehaviour
 {
     public TeamObj follow;
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    
     void Update()
     {
 

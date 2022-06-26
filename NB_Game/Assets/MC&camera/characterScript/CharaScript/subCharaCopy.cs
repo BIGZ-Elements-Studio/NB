@@ -2,34 +2,39 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class subCharaCopy : TwoDbehavior
 {
+   
+    private characterHealth characterHealth;
     public CharacterInfo thisCharacter;
+
+    //normal atk
     protected int attackNum;
     protected ArrayList damageInfo;
+    //e
     protected int EDamage = 20;
-    protected int QInterval = 2;
     protected int EInterval = 5;
-    public int QEnergy = 100;
+    //q
+    protected int QInterval = 2;
+    protected int QEnergy = 100;
+    //dash
     protected float DashInterval;
     protected float DashCooldown = 16f;
-
+    [SerializeField] protected bool canDash;
+    [SerializeField] protected bool CanDashEffect;
+    [SerializeField] protected bool CanSmallDashEff;
     //change
     protected bool canNormal;
     protected bool canE;
     public float EPassedT;
-
-
     protected bool canQ;
     public float QPassedT;
+    protected bool canWalk;
 
     public string CharacterName;
-    [SerializeField] protected bool canDash;
-    [SerializeField] protected bool CanDashEffect;
-    [SerializeField] protected bool CanSmallDashEff;
-
-    protected bool canWalk;
+   
 
 
     //movement
@@ -45,15 +50,18 @@ public class subCharaCopy : TwoDbehavior
     protected EAttkDetect Dscript;
 
     [SerializeField] protected CameraShaker CameraShaker;
-    protected range normalAtkRange;
     protected WaitForSecondsRealtime wait = new WaitForSecondsRealtime(0.1f);
+
+    protected SetUi UiManager;
 
     // normal attack based on the damageInfo, arraylist of damage and interval
     //QProcess(),EProcess(),Dashed(),DashProcess() need modification
     // need to specify damageInfo,QEnergy(Energy require for Q) in awake
     protected void Awake()
     {
-        
+        characterHealth = GetComponent<characterHealth>();
+        characterHealth.Hited.AddListener(BeenHited);
+        thisCharacter.maxHp = 1;
         thisCharacter.MaxEnergy = 125;
         canNormal = true;
         canE = true;
@@ -64,7 +72,7 @@ public class subCharaCopy : TwoDbehavior
         CanDashEffect = true;
         CanSmallDashEff = true;
         canWalk = true;
-
+        UiManager = GetComponentInParent <SetUi>();
         cam = GameObject.Find("MainCamera").GetComponent<Transform>();
         EAttkDetect.successfulDash += Dashed;
         DashInterval = 0.3f;
@@ -76,10 +84,12 @@ public class subCharaCopy : TwoDbehavior
        
         canNormal = true;
         UiManager.showEnergy(thisCharacter.currentEnergy, thisCharacter.MaxEnergy,QEnergy);
+        
         if (!canE)
         {
             UiManager.EShowCD(EInterval, EPassedT);
-           // UiE.ShowCD(EInterval, EPassedT);
+            
+            // UiE.ShowCD(EInterval, EPassedT);
         }
         else
         {
@@ -242,18 +252,14 @@ public class subCharaCopy : TwoDbehavior
         
     }
 
+    protected virtual void BeenHited(int remainingPoise)
+    {
+       
+    }
+
     #endregion
 
-    protected async Task ESetTime()
-    {
-        EPassedT = 0;
-        while (EPassedT < EInterval)
-        {
-            EPassedT += 0.1f;
-            await Task.Delay(100);
-        }
-        EPassedT = 0;
-    }
+    
     protected void hitTarget(float harness, GameObject target)
     {
         if (target.GetComponent<Rigidbody>() != null)
@@ -270,7 +276,9 @@ public class subCharaCopy : TwoDbehavior
     protected void changeEnergy(int i)
     {
         thisCharacter.changeEnergy(i);
-        UiManager.showEnergy(thisCharacter.currentEnergy, thisCharacter.MaxEnergy,QEnergy);
+
+        UiManager.showEnergy(thisCharacter.currentEnergy, thisCharacter.MaxEnergy, QEnergy);
+        
     }
 
     protected void setEnergy(int i)
@@ -290,25 +298,4 @@ public class NormalAtkInfo{
     }
 }
 
-public class range{
-    Vector3 center;
-    Vector3 halfExtent;
-    Quaternion roation;
-    int layerMask;
-    public range(Vector3 c, Vector3 h, Quaternion r)
-    {
-        center = c;
-        halfExtent = h;
-        roation = r;
-        layerMask = 7;
-    }
 
-    public range(Vector3 c, Vector3 h)
-    {
-        center = c;
-        halfExtent = h;
-        roation = Quaternion.Euler(0,0,0) ;
-        layerMask = 7;
-    }
-
-}
