@@ -13,7 +13,7 @@ public class showE : MonoBehaviour
 
     bool running;
     private StringBuilder timerTxtBuilder = new StringBuilder();
-    private void Start()
+    private void Awake()
     {
         running = false;
     }

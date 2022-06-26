@@ -6,7 +6,7 @@ public class showQ : MonoBehaviour
 {
     public Gradient color;
     public Image background;
-    private void Start()
+    private void Awake()
     {
         background = GetComponent<Image>();
 

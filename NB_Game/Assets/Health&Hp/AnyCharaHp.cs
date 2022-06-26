@@ -2,35 +2,19 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AnyCharaHp : MonoBehaviour
+public  class AnyCharaHp : MonoBehaviour
 {
-    public void takeDamage(int damage)
-    {
-      
-    }
+    public virtual void takeDamage(int damage) { }
 
-    public void recover(int recover)
-    {
-        
-    }
+    public virtual void recover(int recover) { }
+    public virtual void totalrecover() { }
 
-    public void totalrecover()
-    {
-       
-    }
 
-    public void recoverByPercent(int percent)
-    {
-        
-    }
+    public virtual void recoverByPercent(int percent) { }
 
-    public void recoverToPercent(int percent)
-    {
-        
-    }
+    public virtual void recoverToPercent(int percent) { }
 
-    void die()
-    {
 
-    }
+    public virtual void die() { }
+    
 }

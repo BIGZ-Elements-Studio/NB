@@ -63,10 +63,11 @@ public class TwoCharacter : subCharaCopy
     #region E
     protected override async Task EProcess()
     {
+
         UiManager.EShowCD(EInterval, 0);
+       
         E();
         canE = false;
-        ESetTime();
         await Task.Delay(EInterval * 1000);
         canE = true;
     }

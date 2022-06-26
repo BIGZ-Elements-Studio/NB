@@ -7,7 +7,26 @@ public class CharacterInfo : ScriptableObject
 {
     //—™¡ø
     public int currentHp;
-    public int maxHp;
+
+    private int maxHp_;
+    public int maxHp {
+        get
+        {
+            return maxHp_;
+        }
+        set
+        {
+            if (value>0)
+            {
+                maxHp_ = value;
+            }
+            else
+            {
+                maxHp_ = 1;
+                Debug.Log("maxHp must be greater than zero");
+            }
+        }
+    }
     public bool die;
     //»Õ–‘
     public int maxPoiseHealth;

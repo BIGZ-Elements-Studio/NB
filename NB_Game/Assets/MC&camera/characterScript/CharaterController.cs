@@ -44,11 +44,19 @@ public class CharaterController : MonoBehaviour
         twoDS.enabled = !threeD.value;
         threeDS.enabled = threeD.value;
         SwithchState();
-        FirstButton.onClick.AddListener(delegate { changeByBottom(1); });
-        SecondButton.onClick.AddListener(delegate { changeByBottom(2); });
-        ThirdButton.onClick.AddListener(delegate { changeByBottom(3); });
+        
         change(2);
         change(1);
+        FirstButton?.onClick.AddListener(delegate { changeByBottom(1); });
+        SecondButton?.onClick.AddListener(delegate { changeByBottom(2); });
+        ThirdButton?.onClick.AddListener(delegate { changeByBottom(3); });
+    }
+
+    public void setButton(Button first, Button second, Button third)
+    {
+        FirstButton= first;
+        SecondButton= second;
+        ThirdButton= third;
     }
 
     private void Update()
@@ -142,10 +150,12 @@ public class CharaterController : MonoBehaviour
             characterPosition[beforeCurrent] = characterPosition[i];
             characterPosition.Remove(i);
             //characterPosition.Remove(i);
-            
         }
         
     }
+
+    
+    
 
     private void changeByBottom(int position)
     {
@@ -161,51 +171,7 @@ public class CharaterController : MonoBehaviour
         change(Changedcharacter);
     }
 
-    /*void change(int i)
-    {
-        int beforeCurrent = current;
-        current = i;
-        One.SetActive(false);
-        Two.SetActive(false);
-        Three.SetActive(false);
-        Four.SetActive(false);
-
-        if (i == 1&& !One.GetComponent<characterHealth>().died)
-        {
-            
-                One.SetActive(true);
-                team.currentC = 1;
-                GlobalUiManager.setName(1, Two);
-                GlobalUiManager.setName(2, Three);
-                GlobalUiManager.setName(3, Four);
-            
-        }
-        else if (i == 2 && !Two.GetComponent<characterHealth>().died)
-        {
-            
-            Two.SetActive(true);
-            team.currentC = 2;
-            GlobalUiManager.setName(1, One);
-            GlobalUiManager.setName(2, Three);
-            GlobalUiManager.setName(3, Four);
-        }
-        else if (i == 3 && !Three.GetComponent<characterHealth>().died)
-        {
-            Three.SetActive(true);
-            team.currentC = 3;
-            GlobalUiManager.setName(1, One);
-            GlobalUiManager.setName(2, Two);
-            GlobalUiManager.setName(3, Four);
-        }
-        else if( !Four.GetComponent<characterHealth>().died)
-        {
-            Four.SetActive(true);
-            team.currentC = 4;
-            GlobalUiManager.setName(1, One);
-            GlobalUiManager.setName(2, Two);
-            GlobalUiManager.setName(3, Three);
-        }
-    }*/
+  
     void SwithchState()
     {
         threeD.value = !threeD.value;
@@ -218,25 +184,27 @@ public class CharaterController : MonoBehaviour
         Four.GetComponent<subCharaCopy>().enabled = threeD.value;
     }
 
-    void LogDictionary(Dictionary<int, GameObject> a)
+
+   void showEnergy(int Energy, int MaxEnergy, int QEnergy)
     {
-        Debug.Log("characers");
-        foreach (int character in characterPosition.Keys)
-        {
-            Debug.Log(character+" "+a[character]);
-        }
-        Debug.Log("/////////////");
+        Debug.Log("showEnergy "+Energy+" "+MaxEnergy+" "+ QEnergy);
     }
-    void LogDictionary(Dictionary<int, int> a)
+     void showHP(int HP, int MaxHP)
     {
-        Debug.Log("charaPosition");
-        foreach (int character in characterPosition.Keys)
-        {
-            Debug.Log(character + " " + a[character]);
-        }
-        Debug.Log("/////////////");
+        Debug.Log("showHP " + HP +" "+ MaxHP );
     }
 
+
+     void EShowCD(float length, float TimePassed)
+    {
+        Debug.Log("EShowCD " + length + " " + TimePassed);
+    }
+
+
+     void Ereset()
+    {
+        Debug.Log("Ereset");
+    }
 
 
 }

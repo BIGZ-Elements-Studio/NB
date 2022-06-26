@@ -31,7 +31,7 @@ public class subCharacter : TwoDbehavior
 
     bool canWalk = true;
 
-
+    UiManager UiManager;
     //movement
     float xDirection;
     float zDirection;
@@ -105,7 +105,8 @@ public class subCharacter : TwoDbehavior
 
     private void OnEnable()
     {
-        UiManager.showEnergy(thisCharacter.currentEnergy, thisCharacter.MaxEnergy,QEnergy);
+        UiManager?.showEnergy(thisCharacter.currentEnergy, thisCharacter.MaxEnergy,QEnergy);
+
         if (!canE)
         {
             UiE.GetComponent<showE>().ShowCD(EInterval, EPassedT);
